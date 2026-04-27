@@ -126,4 +126,4 @@ Or connect your GitHub repo at [vercel.com](https://vercel.com).
 
 ---
 
-Built with ❤️ in Nairobi.
+Built with passion in Nairobi.

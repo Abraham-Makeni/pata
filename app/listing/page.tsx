@@ -6,7 +6,7 @@ import ProviderCard from '@/components/cards/ProviderCard'
 import { ProviderCardSkeleton } from '@/components/ui/Skeletons'
 import { CATEGORIES, PROVIDERS, getProvidersByCategory } from '@/lib/data'
 
-const SORT_OPTIONS = ['All', '⭐ 4.5+', 'KSh 0–1K', 'KSh 1K–5K', 'Premium']
+const SORT_OPTIONS = ['All', '4.5+ Stars', 'KSh 0–1K', 'KSh 1K–5K', 'Premium']
 const LOCATIONS   = ['All Areas', 'Nairobi CBD', 'Westlands', 'Kilimani', 'Karen', 'Lavington']
 
 function ListingContent() {
@@ -22,7 +22,7 @@ function ListingContent() {
   const filtered = baseList.filter(p => {
     const sortOk =
       activeSort === 'All'         ? true :
-      activeSort === '⭐ 4.5+'     ? p.rating >= 4.5 :
+      activeSort === '4.5+ Stars'  ? p.rating >= 4.5 :
       activeSort === 'KSh 0–1K'   ? p.startingPrice < 1000 :
       activeSort === 'KSh 1K–5K'  ? p.startingPrice >= 1000 && p.startingPrice < 5000 :
       activeSort === 'Premium'     ? p.startingPrice >= 5000 : true
@@ -92,7 +92,7 @@ function ListingContent() {
           ? filtered.map(p => <ProviderCard key={p.id} provider={p} />)
           : (
             <div className="text-center py-16 text-stone-400">
-              <p className="text-3xl mb-3">🔍</p>
+              <p className="text-3xl mb-3">�</p>
               <p className="font-medium">No providers found</p>
               <p className="text-sm mt-1">Try adjusting your filters</p>
             </div>

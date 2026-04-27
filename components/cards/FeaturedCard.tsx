@@ -14,7 +14,7 @@ export default function FeaturedCard({ provider: p }: { provider: Provider }) {
             className="w-full h-full object-cover"
           />
           <div className="absolute top-2 right-2 bg-white rounded-full px-2 py-0.5 text-[11px] font-semibold flex items-center gap-0.5">
-            ⭐ {p.rating}
+            ★ {p.rating}
           </div>
         </div>
         {/* Body */}

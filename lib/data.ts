@@ -44,22 +44,22 @@ export type Category = {
 }
 
 export const CATEGORIES: Category[] = [
-  { id: 'barbers',        name: 'Barbers',         emoji: '✂️',  description: 'Fades, cuts & grooming',       count: 48 },
-  { id: 'hair-stylists',  name: 'Hair Stylists',   emoji: '💇',  description: 'Natural, braids & color',      count: 62 },
-  { id: 'tattoo-artists', name: 'Tattoo Artists',  emoji: '🖊️', description: 'Custom ink & fine line',       count: 24 },
-  { id: 'nail-techs',     name: 'Nail Techs',      emoji: '💅',  description: 'Gel, art & acrylics',          count: 53 },
-  { id: 'makeup-artists', name: 'Makeup Artists',  emoji: '💄',  description: 'Bridal, glam & editorial',     count: 37 },
-  { id: 'photographers',  name: 'Photographers',   emoji: '📷',  description: 'Portrait, events & content',   count: 41 },
+  { id: 'barbers',        name: 'Barbers',         emoji: '',  description: 'Fades, cuts & grooming',       count: 48 },
+  { id: 'hair-stylists',  name: 'Hair Stylists',   emoji: '',  description: 'Natural, braids & color',      count: 62 },
+  { id: 'tattoo-artists', name: 'Tattoo Artists',  emoji: '', description: 'Custom ink & fine line',       count: 24 },
+  { id: 'nail-techs',     name: 'Nail Techs',      emoji: '',  description: 'Gel, art & acrylics',          count: 53 },
+  { id: 'makeup-artists', name: 'Makeup Artists',  emoji: '',  description: 'Bridal, glam & editorial',     count: 37 },
+  { id: 'photographers',  name: 'Photographers',   emoji: '',  description: 'Portrait, events & content',   count: 41 },
 ]
 
 export const PROVIDERS: Provider[] = [
   {
-    id: '1', name: 'Kevo Cuts', slug: 'kevo-cuts', emoji: '✂️', image: '/kevo-cuts.jpg',
+    id: '1', name: 'Kevo Cuts', slug: 'kevo-cuts', emoji: '', image: '/kevo-cuts.jpg',
     specialty: 'Fades & Line-ups', category: 'barbers', location: 'Nairobi CBD',
     rating: 4.9, reviewCount: 212, bookings: 580, startingPrice: 350,
     tags: ['Fades', 'Line-ups', 'Beard', 'Kids'],
     about: "Nairobi's top fade specialist with 7 years of precision work. Kevo brings a global eye to local culture — trained in Johannesburg and London, now back home giving Nairobi its best cuts. Every client walks out looking like the main character.",
-    gallery: ['✂️','💈','🪒','⭐','🏆','🎯','💎','🌟','🔥'],
+    gallery: ['','','','','','','','',''],
     services: [
       { name: 'Classic Cut',           price: 'KSh 350',   duration: '30 min' },
       { name: 'Fade + Line-up',        price: 'KSh 500',   duration: '45 min' },
@@ -75,12 +75,12 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '2', name: 'Slim Barbers', slug: 'slim-barbers', emoji: '💈', image: '/slim-barbers.jpg',
+    id: '2', name: 'Slim Barbers', slug: 'slim-barbers', emoji: '', image: '/slim-barbers.jpg',
     specialty: 'Classic & Modern Cuts', category: 'barbers', location: 'Westlands',
     rating: 4.7, reviewCount: 98, bookings: 310, startingPrice: 400,
     tags: ['Classic', 'Modern', 'Kids', 'Shave'],
     about: "Family barbershop with 10+ years in Westlands. We welcome everyone from toddlers to grandfathers. Classic techniques with a modern finish. Always a warm, welcoming experience.",
-    gallery: ['💈','✂️','👨','🎯','⚡','🌟','💪','🎨','🏅'],
+    gallery: ['','','','','','','','',''],
     services: [
       { name: 'Adult Cut',           price: 'KSh 400', duration: '35 min' },
       { name: 'Kids Cut',            price: 'KSh 300', duration: '25 min' },
@@ -95,12 +95,12 @@ export const PROVIDERS: Provider[] = [
     verified: true,
   },
   {
-    id: '3', name: 'The Blade Room', slug: 'blade-room', emoji: '🪒', image: '/blade-room.jpg',
+    id: '3', name: 'The Blade Room', slug: 'blade-room', emoji: '', image: '/blade-room.jpg',
     specialty: 'Premium Grooming', category: 'barbers', location: 'Karen',
     rating: 4.8, reviewCount: 156, bookings: 420, startingPrice: 800,
     tags: ['Premium', 'Beard', 'Hot Towel', 'Luxury'],
     about: "Nairobi's most elevated barbershop experience. Hot towel shaves, premium Kenyan-sourced products, a curated playlist, and artisans who genuinely love their craft. Where grooming meets ritual.",
-    gallery: ['🪒','💎','✨','🎩','🌿','⚜️','🏛️','🌹','🧴'],
+    gallery: ['','','','','','','','',''],
     services: [
       { name: 'Signature Cut',           price: 'KSh 800',   duration: '45 min' },
       { name: 'Hot Towel Shave',         price: 'KSh 900',   duration: '40 min' },
@@ -114,12 +114,12 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '4', name: 'Zuri Hair Studio', slug: 'zuri-hair-studio', emoji: '💇', image: '/zuri-hair-studio.jpg',
+    id: '4', name: 'Zuri Hair Studio', slug: 'zuri-hair-studio', emoji: '', image: '/zuri-hair-studio.jpg',
     specialty: 'Natural Hair & Braids', category: 'hair-stylists', location: 'Kilimani',
     rating: 4.9, reviewCount: 289, bookings: 620, startingPrice: 1200,
     tags: ['Natural', 'Braids', 'Locs', 'Protective'],
     about: "Celebrating the crown. A safe space for natural African hair. Specialised in protective styles, loc journeys, chemical-free treatments, and big chops done with love and precision.",
-    gallery: ['💇','🌺','✨','💜','🌿','👑','🌸','💫','🦋'],
+    gallery: ['','','','','','','','',''],
     services: [
       { name: 'Wash & Style',          price: 'KSh 1,200', duration: '60 min'  },
       { name: 'Box Braids',            price: 'KSh 3,500', duration: '240 min' },
@@ -134,12 +134,12 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '5', name: 'Glam House', slug: 'glam-house', emoji: '🌟', image: '/glam-house.jpg',
+    id: '5', name: 'Glam House', slug: 'glam-house', emoji: '', image: '/glam-house.jpg',
     specialty: 'Weaves & Color', category: 'hair-stylists', location: 'Lavington',
     rating: 4.6, reviewCount: 167, bookings: 390, startingPrice: 2500,
     tags: ['Weaves', 'Color', 'Balayage', 'Relaxer'],
     about: "Full-service glam salon specialising in weave installations, balayage, and color corrections. International trends, Nairobi-rooted — with your hair health always the priority.",
-    gallery: ['🌟','💅','✂️','🎨','💫','🔥','💛','🌈','✨'],
+    gallery: ['','','','','','','','',''],
     services: [
       { name: 'Weave Install',          price: 'KSh 2,500', duration: '120 min' },
       { name: 'Balayage / Highlights',  price: 'KSh 4,000', duration: '150 min' },
@@ -154,12 +154,12 @@ export const PROVIDERS: Provider[] = [
     verified: true,
   },
   {
-    id: '6', name: 'Nailhaus', slug: 'nailhaus', emoji: '💅', image: '/nailhaus.jpg',
+    id: '6', name: 'Nailhaus', slug: 'nailhaus', emoji: '', image: '/nailhaus.jpg',
     specialty: 'Nail Art & Gel', category: 'nail-techs', location: 'Ngong Road',
     rating: 4.8, reviewCount: 203, bookings: 510, startingPrice: 800,
     tags: ['Gel', 'Nail Art', 'Acrylics', 'SNS'],
     about: "Creative nail studio where every set is a piece of art. From clean minimalism to bold Afro-inspired nail art. Using only premium, long-lasting products.",
-    gallery: ['💅','🎨','✨','💎','🌸','🦋','🌺','⚡','💜'],
+    gallery: ['','','','','','','','',''],
     services: [
       { name: 'Gel Manicure',         price: 'KSh 800',   duration: '50 min' },
       { name: 'Nail Art (per nail)',   price: 'KSh 150',   duration: '5 min'  },
@@ -174,12 +174,12 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '7', name: 'Beat by Adaeze', slug: 'beat-by-adaeze', emoji: '💄', image: '/beat-by-adaeze.jpg',
+    id: '7', name: 'Beat by Adaeze', slug: 'beat-by-adaeze', emoji: '', image: '/beat-by-adaeze.jpg',
     specialty: 'Bridal & Editorial', category: 'makeup-artists', location: 'Parklands',
     rating: 5.0, reviewCount: 97, bookings: 180, startingPrice: 3500,
     tags: ['Bridal', 'Editorial', 'Glam', 'Airbrush'],
     about: "Award-winning MUA with 8 years across Nairobi, Lagos, and London. Known for celebrating melanin beautifully — long-lasting, skin-first looks, always intentional. Your face is her canvas.",
-    gallery: ['💄','✨','👑','🌹','💋','🎭','🌺','💫','🏆'],
+    gallery: ['','','','','','','','',''],
     services: [
       { name: 'Bridal Makeup (+ trial)', price: 'KSh 8,000', duration: '90 min' },
       { name: 'Evening / Event Glam',    price: 'KSh 4,000', duration: '60 min' },
@@ -194,12 +194,12 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '8', name: 'Lense by Odhis', slug: 'lense-by-odhis', emoji: '📷', image: '/lense-by-odhis.jpg',
+    id: '8', name: 'Lense by Odhis', slug: 'lense-by-odhis', emoji: '', image: '/lense-by-odhis.jpg',
     specialty: 'Portrait & Lifestyle', category: 'photographers', location: 'Muthaiga',
     rating: 4.9, reviewCount: 142, bookings: 260, startingPrice: 5000,
     tags: ['Portrait', 'Lifestyle', 'Events', 'Corporate'],
     about: "Visual storyteller capturing authentic Nairobi moments. Shot for leading Kenyan brands, international NGOs, and hundreds of individuals. Whether personal or corporate — every frame matters.",
-    gallery: ['📷','🎞️','✨','🌅','🏙️','🎬','🌿','🎯','💫'],
+    gallery: ['','','','','','','','',''],
     services: [
       { name: 'Portrait Session (1hr)',      price: 'KSh 5,000',  duration: '60 min'  },
       { name: 'Lifestyle Shoot (2hr)',       price: 'KSh 9,000',  duration: '120 min' },
@@ -214,12 +214,12 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '9', name: 'Ink & Soul', slug: 'ink-and-soul', emoji: '🖊️', image: '/ink-and-soul.jpg',
+    id: '9', name: 'Ink & Soul', slug: 'ink-and-soul', emoji: '', image: '/ink-and-soul.jpg',
     specialty: 'Fine Line & Illustrative', category: 'tattoo-artists', location: 'Westlands',
     rating: 4.8, reviewCount: 89, bookings: 310, startingPrice: 2000,
     tags: ['Fine Line', 'Illustrative', 'Color', 'Blackwork'],
     about: "Tattoo studio celebrating African iconography and modern illustration. Every piece is custom-designed. No flash, no shortcuts. Clean studio, sterile equipment, artistry that lasts forever.",
-    gallery: ['🖊️','🎨','⚡','🦅','🌿','💎','🌙','🔥','🌺'],
+    gallery: ['','','','','','','','',''],
     services: [
       { name: 'Small Tattoo (≤3cm)',    price: 'KSh 2,000',  duration: '60 min'  },
       { name: 'Medium Design (3–8cm)',  price: 'KSh 4,500',  duration: '90 min'  },

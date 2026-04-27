@@ -2,95 +2,126 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
 
 :root {
-  --font-poppins: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-syne: 'Syne', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: #ffffff;
-  color: #000000;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
+  font-family: var(--font-outfit);
+  background: #F7F7F5;
+  color: #0a0a0a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
 }
 
-/* Force Poppins font on all elements */
-* {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-}
+/* Remove scrollbars on mobile */
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
 
-button, input, textarea, select {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 0; height: 0; }
-
-/* Glass utility */
-.glass {
-  background: rgba(255, 255, 255, 0.80);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+/* ── GLASS ── */
+.glass-nav {
+  background: rgba(247, 247, 245, 0.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
-
+.glass-bottom {
+  background: rgba(247, 247, 245, 0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
 .glass-dark {
-  background: rgba(0, 0, 0, 0.80);
+  background: rgba(10, 10, 10, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+/* ── IMAGE PLACEHOLDER ── */
+.img-placeholder {
+  background: linear-gradient(135deg, #EFEFEC 0%, #E5E5E0 100%);
+  position: relative;
+  overflow: hidden;
+}
+.img-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+.img-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
 }
 
-/* Horizontal scroll snapping */
-.snap-scroll {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 4px;
-}
-.snap-scroll > * {
-  scroll-snap-align: start;
-  flex-shrink: 0;
-}
-
-/* Page transition */
-.page-enter {
-  animation: fadeUp 0.35s ease both;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ── SKELETON ── */
+.skeleton {
+  background: linear-gradient(90deg, #EFEFEC 25%, #E5E5E0 50%, #EFEFEC 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
 }
 
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  100% { background-position:  200% 0; }
 }
 
-.skeleton {
-  background: linear-gradient(90deg, #f4f4f2 25%, #e8e8e4 50%, #f4f4f2 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-  border-radius: 8px;
+/* ── PAGE ENTER ── */
+.page-enter {
+  animation: pageEnter 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger children */
+.stagger > * { opacity: 0; animation: pageEnter 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+.stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger > *:nth-child(4) { animation-delay: 0.20s; }
+.stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* ── POP ANIMATION ── */
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.animate-pop { animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* ── TAP EFFECT ── */
+.tap-effect { transition: transform 0.12s ease, opacity 0.12s ease; }
+.tap-effect:active { transform: scale(0.96); opacity: 0.85; }
+
+/* ── HIDE overflow horizontal ── */
+.no-scrollbar { overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── RATING STAR ── */
+.star-gold { color: #C9A84C; }
+
+/* ── Input reset ── */
+input, textarea {
+  outline: none;
+  -webkit-appearance: none;
+  border-radius: 0;
 }

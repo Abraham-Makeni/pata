@@ -1,230 +1,106 @@
 'use client'
-import { useState, Suspense, useMemo } from 'react'
-import { useSearchParams } from 'next/navigation'
-import Navbar from '@/components/layout/Navbar'
-import ProviderCard from '@/components/cards/ProviderCard'
-import { ProviderCardSkeleton } from '@/components/ui/Skeletons'
+import { useState, Suspense } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { CATEGORIES, PROVIDERS, getProvidersByCategory } from '@/lib/data'
-import { searchProviders, debounce } from '@/lib/search'
-import { useProgressiveLoading, getLoadingMessage } from '@/lib/loading'
-import { SearchError } from '@/lib/error-handling'
-import { SearchErrorBoundary, LoadingErrorBoundary } from '@/components/ui/ErrorBoundary'
 
-const SORT_OPTIONS = ['All', '4.5+ Stars', 'Verified Only', 'KSh 0–1K', 'KSh 1K–5K', 'Premium']
-const LOCATIONS   = ['All Areas', 'Nairobi CBD', 'Westlands', 'Kilimani', 'Karen', 'Lavington']
+const SORTS    = ['All','⭐ 4.5+','KSh 0–1K','KSh 1K–5K','Premium']
+const LOCATIONS = ['All Areas','Nairobi CBD','Westlands','Kilimani','Karen','Lavington','Parklands','Muthaiga','Ngong Road']
 
 function ListingContent() {
-  const searchParams = useSearchParams()
-  const categoryId   = searchParams.get('category') ?? ''
-  const category     = CATEGORIES.find(c => c.id === categoryId)
+  const router = useRouter()
+  const params = useSearchParams()
+  const catId  = params.get('category') ?? ''
+  const cat    = CATEGORIES.find(c => c.id === catId)
+  const [sort, setSort] = useState('All')
+  const [loc,  setLoc]  = useState('All Areas')
 
-  const [activeSort, setActiveSort]   = useState('All')
-  const [activeLoc,  setActiveLoc]    = useState('All Areas')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [isSearching, setIsSearching] = useState(false)
-  const [searchError, setSearchError] = useState<Error | null>(null)
-
-  // Debounced search function
-  const debouncedSearch = useMemo(
-    () => debounce((query: string) => {
-      setIsSearching(false)
-      setSearchQuery(query)
-    }, 300),
-    []
-  )
-
-  // Handle search input change
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value
-    setIsSearching(true)
-    setSearchError(null)
-    debouncedSearch(query)
-  }
-
-  const baseList = categoryId ? getProvidersByCategory(categoryId) : PROVIDERS
-
-  // Apply search filter first with error handling
-  let searchFiltered = baseList
-  if (searchQuery) {
-    try {
-      searchFiltered = searchProviders(baseList, { query: searchQuery })
-    } catch (error) {
-      setSearchError(error instanceof Error ? error : new Error('Search failed'))
-      searchFiltered = []
-    }
-  }
-
-  const filtered = searchFiltered.filter(p => {
-    const sortOk =
-      activeSort === 'All'         ? true :
-      activeSort === '4.5+ Stars'  ? p.rating >= 4.5 :
-      activeSort === 'Verified Only' ? p.verified :
-      activeSort === 'KSh 0–1K'   ? p.startingPrice < 1000 :
-      activeSort === 'KSh 1K–5K'  ? p.startingPrice >= 1000 && p.startingPrice < 5000 :
-      activeSort === 'Premium'     ? p.startingPrice >= 5000 : true
-
-    const locOk = activeLoc === 'All Areas' || p.location === activeLoc
-    
-    return sortOk && locOk
+  const base = catId ? getProvidersByCategory(catId) : PROVIDERS
+  const list = base.filter(p => {
+    const s = sort === 'All' ? true : sort === '⭐ 4.5+' ? p.rating >= 4.5 : sort === 'KSh 0–1K' ? p.startingPrice < 1000 : sort === 'KSh 1K–5K' ? p.startingPrice >= 1000 && p.startingPrice < 5000 : p.startingPrice >= 5000
+    const l = loc === 'All Areas' || p.location === loc
+    return s && l
   })
 
-  // Progressive loading for providers
-  const { visibleItems, isLoading } = useProgressiveLoading(
-    filtered,
-    6, // initial count
-    3, // increment count
-    150 // delay between batches
-  )
-
   return (
-    <div className="min-h-screen bg-chalk">
-      <Navbar
-        showBack
-        backHref="/home"
-        title={category?.name ?? 'All Providers'}
-        rightSlot={<span />}
-      />
-
-      {/* Category info */}
-      {category && (
-        <div className="px-5 py-3 border-b border-gray-100">
-          <p className="text-gray-500 text-[13px]">
-            {category.count}+ providers · {category.description}
-          </p>
-        </div>
-      )}
-
-      {/* Search */}
-      <div className="px-5 py-3 border-b border-gray-100">
-        <div className="flex items-center gap-3 bg-gray-100 border border-gray-200 rounded-full px-4 py-2.5">
-          <span className="text-gray-400 text-lg">🔍</span>
-          <input
-            type="text"
-            placeholder="Search providers, services..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="flex-1 bg-transparent outline-none text-black placeholder:text-gray-400 text-[14px] font-sans"
-          />
-          {isSearching && (
-            <span className="text-gray-400 text-sm">Searching...</span>
-          )}
-        </div>
-        {searchQuery && (
-          <>
-            {searchError ? (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3">
-                <p className="text-red-600 text-sm">
-                  Search failed: {searchError.message}
-                </p>
-                <button
-                  onClick={() => {
-                    setSearchError(null)
-                    handleSearchChange({ target: { value: searchQuery } } as React.ChangeEvent<HTMLInputElement>)
-                  }}
-                  className="text-red-600 text-xs underline mt-1"
-                >
-                  Try Again
-                </button>
-              </div>
-            ) : (
-              <p className="text-gray-500 text-xs mt-2">
-                {filtered.length} results for &quot;{searchQuery}&quot;
-              </p>
-            )}
-          </>
-        )}
+    <div className="min-h-screen bg-surface-soft pb-6">
+      {/* Header */}
+      <div className="bg-brand px-5 pt-14 pb-5">
+        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center mb-4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <h1 style={{ fontFamily:'var(--font-syne)', fontSize:26, fontWeight:800, color:'#fff', letterSpacing:'-1px' }}>
+          {cat?.name ?? 'All Services'}
+        </h1>
+        {cat && <p className="text-white/50 text-[13px] mt-1" style={{ fontFamily:'var(--font-outfit)' }}>{cat.count}+ providers · {cat.description}</p>}
       </div>
 
-      {/* Sort chips */}
-      <div className="flex gap-2 overflow-x-auto px-5 py-3 snap-scroll border-b border-gray-100">
-        {SORT_OPTIONS.map(s => (
-          <button
-            key={s}
-            onClick={() => setActiveSort(s)}
-            className={`px-3.5 py-1.5 rounded-full text-[12px] font-medium border whitespace-nowrap transition-all flex-shrink-0
-              ${activeSort === s
-                ? 'bg-black text-white border-black'
-                : 'bg-white text-black border-gray-200 hover:border-gray-400'
-              }`}
-          >
-            {s}
-          </button>
+      {/* Sort */}
+      <div className="flex gap-2 px-5 pt-4 pb-1 overflow-x-auto no-scrollbar">
+        {SORTS.map(s => (
+          <button key={s} onClick={() => setSort(s)}
+            className={`px-3.5 py-1.5 rounded-pill text-[12px] font-medium border whitespace-nowrap flex-shrink-0 tap-effect transition-all ${sort===s ? 'bg-brand text-white border-brand' : 'bg-white text-ink-secondary border-surface-border'}`}
+            style={{ fontFamily:'var(--font-outfit)' }}>{s}</button>
         ))}
       </div>
 
-      {/* Location chips */}
-      <div className="flex gap-2 overflow-x-auto px-5 py-2.5 snap-scroll border-b border-gray-100">
+      {/* Location */}
+      <div className="flex gap-2 px-5 pt-2 pb-3 overflow-x-auto no-scrollbar border-b border-surface-border mb-1">
         {LOCATIONS.map(l => (
-          <button
-            key={l}
-            onClick={() => setActiveLoc(l)}
-            className={`px-3.5 py-1.5 rounded-full text-[12px] font-medium border whitespace-nowrap transition-all flex-shrink-0
-              ${activeLoc === l
-                ? 'bg-gray-800 text-white border-gray-800'
-                : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
-              }`}
-          >
+          <button key={l} onClick={() => setLoc(l)}
+            className={`px-3.5 py-1.5 rounded-pill text-[12px] border whitespace-nowrap flex-shrink-0 tap-effect transition-all ${loc===l ? 'bg-brand/90 text-white border-brand/90' : 'bg-white text-ink-muted border-surface-border'}`}
+            style={{ fontFamily:'var(--font-outfit)' }}>
             📍 {l}
           </button>
         ))}
       </div>
 
-      
-      {/* Results */}
-      <LoadingErrorBoundary>
-        <SearchErrorBoundary>
-          <div className="px-5 py-4 space-y-3">
-        <p className="text-[12px] text-gray-400 font-medium mb-1">
-          {filtered.length} {filtered.length === 1 ? 'provider' : 'providers'} found
-          {searchQuery && ` for "${searchQuery}"`}
-          {isLoading && visibleItems.length < filtered.length && ` (${visibleItems.length} loaded)`}
-        </p>
-        {visibleItems.length > 0 ? (
-          <>
-            {visibleItems.map(p => <ProviderCard key={p.id} provider={p} />)}
-            {isLoading && visibleItems.length < filtered.length && (
-              // Show loading skeletons while more items are loading
-              <>
-                <ProviderCardSkeleton />
-                <ProviderCardSkeleton />
-                <ProviderCardSkeleton />
-              </>
-            )}
-          </>
-        ) : filtered.length > 0 ? (
-          // Show loading skeletons while initially loading
-          <>
-            <ProviderCardSkeleton />
-            <ProviderCardSkeleton />
-            <ProviderCardSkeleton />
-          </>
-        ) : (
-          // Show empty state when no results
-          <div className="text-center py-16 text-gray-400">
-            <p className="text-3xl mb-3">🔍</p>
-            <p className="font-medium">
-              {getLoadingMessage(false, filtered.length, searchQuery) || 'No providers found'}
-            </p>
-            <p className="text-sm mt-1">
-              {searchQuery ? 'Try different keywords' : 'Try adjusting your filters'}
-            </p>
+      <p className="px-5 pt-3 pb-2 text-[12px] text-ink-muted" style={{ fontFamily:'var(--font-outfit)' }}>
+        {list.length} {list.length===1?'provider':'providers'} found
+      </p>
+
+      {/* Provider list */}
+      <div className="px-5 space-y-3">
+        {list.length > 0 ? list.map(p => (
+          <Link key={p.id} href={`/profile/${p.id}`}>
+            <div className="bg-white rounded-card p-3.5 flex gap-3.5 shadow-card tap-effect border border-transparent hover:border-brand/10 transition-all">
+              <div className="img-placeholder w-[72px] h-[72px] rounded-xl overflow-hidden flex-shrink-0">
+                <img src={p.avatarImage} alt={p.name} className="w-full h-full object-cover" onError={e=>{(e.target as HTMLImageElement).style.display='none'}}/>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-2">
+                  <p style={{ fontFamily:'var(--font-syne)', fontSize:15, fontWeight:700, letterSpacing:'-0.2px' }}>{p.name}</p>
+                  {p.verified && <span className="text-[10px] bg-surface-muted text-ink-secondary px-2 py-0.5 rounded-full font-medium flex-shrink-0 mt-0.5" style={{ fontFamily:'var(--font-outfit)' }}>✓ Verified</span>}
+                </div>
+                <p className="text-ink-muted text-[12px] mt-0.5" style={{ fontFamily:'var(--font-outfit)' }}>{p.tags[0]} · {p.location}</p>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="flex items-center gap-1 text-[12px]" style={{ fontFamily:'var(--font-outfit)' }}>
+                    <span className="star-gold">★</span>
+                    <span className="font-semibold">{p.rating}</span>
+                    <span className="text-ink-faint">({p.reviewCount})</span>
+                  </span>
+                  <span className="font-semibold text-[13px]" style={{ fontFamily:'var(--font-syne)' }}>From KSh {p.startingPrice.toLocaleString()}</span>
+                </div>
+                <div className="flex gap-1.5 mt-2 flex-wrap">
+                  {p.tags.slice(0,3).map(t => (
+                    <span key={t} className="bg-surface-muted text-ink-secondary text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ fontFamily:'var(--font-outfit)' }}>{t}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Link>
+        )) : (
+          <div className="text-center py-20 text-ink-muted">
+            <p className="text-4xl mb-3">🔍</p>
+            <p className="font-semibold" style={{ fontFamily:'var(--font-syne)' }}>No providers found</p>
+            <p className="text-sm mt-1" style={{ fontFamily:'var(--font-outfit)' }}>Try adjusting your filters</p>
           </div>
         )}
       </div>
-        </SearchErrorBoundary>
-      </LoadingErrorBoundary>
     </div>
   )
 }
 
 export default function ListingPage() {
-  return (
-    <Suspense fallback={
-      <div className="px-5 py-4 space-y-3">
-        {[1,2,3,4].map(i => <ProviderCardSkeleton key={i} />)}
-      </div>
-    }>
-      <ListingContent />
-    </Suspense>
-  )
+  return <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><p className="text-ink-muted">Loading…</p></div>}><ListingContent /></Suspense>
 }

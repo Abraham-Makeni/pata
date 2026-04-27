@@ -1,7 +1,7 @@
 {
   "name": "pata",
   "version": "1.0.0",
-  "description": "PATA – Get Things Done. Local service discovery & booking.",
+  "description": "PATA – Find Your Style. Local service discovery & booking.",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,13 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "clsx": "^2.1.1",
-    "framer-motion": "^11.18.2",
-    "idb": "^8.0.3",
+    "framer-motion": "^11.3.0",
     "next": "^14.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^3.5.0",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

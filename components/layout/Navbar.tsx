@@ -40,19 +40,19 @@ export default function Navbar({
           <button
             onClick={handleBack}
             className={`w-9 h-9 rounded-full flex items-center justify-center text-lg transition-all
-              ${dark ? 'bg-white/10 text-white hover:bg-white/20' : 'bg-gray-100 text-black hover:bg-gray-200'}`}
+              ${dark ? 'bg-white/10 text-white hover:bg-white/20' : 'bg-stone-100 text-ink hover:bg-stone-200'}`}
           >
             ←
           </button>
         ) : (
           <Link href="/home">
-            <span className={`font-sans text-2xl font-semibold tracking-tight ${dark ? 'text-white' : 'text-black'}`}>
+            <span className={`font-serif text-2xl font-semibold tracking-tight ${dark ? 'text-white' : 'text-ink'}`}>
               PATA
             </span>
           </Link>
         )}
         {title && (
-          <span className={`font-sans text-xl font-medium ${dark ? 'text-white' : 'text-black'}`}>
+          <span className={`font-serif text-xl font-medium ${dark ? 'text-white' : 'text-ink'}`}>
             {title}
           </span>
         )}
@@ -63,11 +63,11 @@ export default function Navbar({
         {rightSlot ?? (
           !showBack && (
             <>
-              <button className={`w-9 h-9 rounded-full flex items-center justify-center text-lg transition-all font-sans
-                ${dark ? 'text-white hover:bg-white/10' : 'text-black hover:bg-gray-100'}`}>
+              <button className={`w-9 h-9 rounded-full flex items-center justify-center text-base transition-all
+                ${dark ? 'text-white hover:bg-white/10' : 'text-ink hover:bg-stone-100'}`}>
                 🔔
               </button>
-              <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white text-xs font-semibold cursor-pointer">
+              <div className="w-8 h-8 rounded-full bg-ink flex items-center justify-center text-white text-xs font-semibold cursor-pointer">
                 AK
               </div>
             </>

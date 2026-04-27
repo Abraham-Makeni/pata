@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { getProviderById, Provider } from '@/lib/data'
 import StarRating from '@/components/ui/StarRating'
 import { ProfileSkeleton } from '@/components/ui/Skeletons'
+import { OptimizedImage } from '@/components/ui/OptimizedImage'
 
 export default function ProfilePage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -13,6 +14,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
 
   // Handle phone call
   const handlePhoneCall = () => {
+    console.log('Phone call clicked', provider?.phone)
     if (provider?.phone) {
       window.location.href = `tel:${provider.phone}`
     }
@@ -20,6 +22,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
 
   // Handle WhatsApp
   const handleWhatsApp = () => {
+    console.log('WhatsApp clicked', provider?.phone)
     if (provider?.phone) {
       const cleanPhone = provider.phone.replace(/\D/g, '')
       const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi, I found you on PATA`
@@ -59,7 +62,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
       {/* Cover */}
       <div className="relative">
         <div className="h-[220px] relative">
-          <img 
+          <OptimizedImage 
             src={p.image} 
             alt={p.name}
             className="w-full h-full object-cover"
@@ -75,10 +78,12 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
         </button>
         {/* Avatar */}
         <div className="absolute -bottom-10 left-5 w-20 h-20 rounded-[18px] overflow-hidden border-[3px] border-chalk shadow-lg">
-          <img 
+          <OptimizedImage 
             src={p.image} 
             alt={p.name}
             className="w-full h-full object-cover"
+            width={80}
+            height={80}
           />
         </div>
       </div>
@@ -229,7 +234,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Floating Contact Buttons */}
-      <div className="fixed bottom-24 right-5 flex flex-col gap-3 z-30">
+      <div className="fixed bottom-24 right-5 flex flex-col gap-3 z-50">
         {/* WhatsApp Button */}
         <button
           onClick={handleWhatsApp}

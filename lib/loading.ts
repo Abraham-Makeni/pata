@@ -79,7 +79,7 @@ export function useSmartLoading<T>(
     return () => {
       isMounted = false
     }
-  }, [...dependencies, refetchTrigger])
+  }, [fetcher, ...dependencies, refetchTrigger])
 
   const refetch = () => {
     setRefetchTrigger(prev => prev + 1)

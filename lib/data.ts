@@ -11,6 +11,8 @@ export type Review = {
   rating: number
   date: string
   text: string
+  wouldRecommend: boolean
+  tags: string[]
 }
 
 export type Provider = {
@@ -22,9 +24,13 @@ export type Provider = {
   specialty: string
   category: string
   location: string
+  phone: string
+  coordinates: { lat: number; lng: number }
   rating: number
   reviewCount: number
   bookings: number
+  bookedCount: number
+  repeatClients: number
   startingPrice: number
   tags: string[]
   about: string
@@ -68,9 +74,9 @@ export const PROVIDERS: Provider[] = [
       { name: 'Kids Cut (under 12)',   price: 'KSh 300',   duration: '25 min' },
     ],
     reviews: [
-      { id: 'r1', author: 'Maina J.',  avatar: 'M', rating: 5, date: '2 days ago',  text: "Kevo is the absolute GOAT. Perfect fade every single time, I won't go anywhere else in Nairobi." },
-      { id: 'r2', author: 'Tobias K.', avatar: 'T', rating: 5, date: '1 week ago',  text: "Professional, clean, and fast. Best barbershop in CBD hands down. The music is always right too." },
-      { id: 'r3', author: 'Victor N.', avatar: 'V', rating: 4, date: '2 weeks ago', text: "Great cuts, just a little busy on weekends. Book ahead of time and you're sorted." },
+      { id: 'r1', author: 'Maina J.',  avatar: 'M', rating: 5, date: '2 days ago',  text: "Kevo is the absolute GOAT. Perfect fade every single time, I won't go anywhere else in Nairobi.", wouldRecommend: true, tags: ['Clean', 'On time', 'Skilled'] },
+      { id: 'r2', author: 'Tobias K.', avatar: 'T', rating: 5, date: '1 week ago',  text: "Professional, clean, and fast. Best barbershop in CBD hands down. The music is always right too.", wouldRecommend: true, tags: ['Professional', 'Quick'] },
+      { id: 'r3', author: 'Victor N.', avatar: 'V', rating: 4, date: '2 weeks ago', text: "Great cuts, just a little busy on weekends. Book ahead of time and you're sorted.", wouldRecommend: true, tags: ['Quality'] },
     ],
     verified: true, featured: true,
   },
@@ -89,8 +95,8 @@ export const PROVIDERS: Provider[] = [
       { name: 'Hair Treatment',      price: 'KSh 600', duration: '30 min' },
     ],
     reviews: [
-      { id: 'r4', author: 'James M.', avatar: 'J', rating: 5, date: '3 days ago', text: "Best place for my son's haircuts. Always welcoming and they never make him cry!" },
-      { id: 'r5', author: 'Grace A.', avatar: 'G', rating: 4, date: '1 week ago', text: "Quick service and fair prices. My go-to spot in Westlands." },
+      { id: 'r4', author: 'James M.', avatar: 'J', rating: 5, date: '3 days ago', text: "Best place for my son's haircuts. Always welcoming and they never make him cry!", wouldRecommend: true, tags: ['Kid-friendly', 'Welcoming'] },
+      { id: 'r5', author: 'Grace A.', avatar: 'G', rating: 4, date: '1 week ago', text: "Quick service and fair prices. My go-to spot in Westlands.", wouldRecommend: true, tags: ['Quick', 'Affordable'] },
     ],
     verified: true,
   },

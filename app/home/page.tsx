@@ -19,7 +19,7 @@ export default function HomePage() {
   })
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-8">
+    <div className="min-h-screen bg-surface-soft pb-24">
       {/* ── HEADER ── */}
       <div className="bg-brand px-5 pt-14 pb-6">
         <div className="flex items-center justify-between mb-5">

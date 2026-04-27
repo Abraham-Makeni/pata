@@ -119,6 +119,11 @@ body {
 /* ── RATING STAR ── */
 .star-gold { color: #C9A84C; }
 
+/* ── SAFE AREA BOTTOM ── */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
 /* ── Input reset ── */
 input, textarea {
   outline: none;

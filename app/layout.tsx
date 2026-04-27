@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import BottomNav from '@/components/layout/BottomNav'
 
 export const metadata: Metadata = {
   title: 'PATA',
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Mobile-first: max 480px centred on desktop */}
         <div className="relative mx-auto min-h-screen bg-surface-soft" style={{ maxWidth: 480 }}>
           {children}
+          <BottomNav />
         </div>
       </body>
     </html>

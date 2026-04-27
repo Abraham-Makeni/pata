@@ -33,6 +33,11 @@ export type Provider = {
   coverImage: string     // provider cover/hero image
   avatarImage: string    // provider avatar (square)
   galleryImages: string[]  // portfolio gallery (9 images each)
+  // Map coordinates (Nairobi area)
+  coordinates?: {
+    lat: number
+    lng: number
+  }
 }
 
 export type Category = {
@@ -111,6 +116,7 @@ export const PROVIDERS: Provider[] = [
     slug: 'kevo-cuts',
     category: 'barbers',
     location: 'Nairobi CBD',
+    coordinates: { lat: -1.2833, lng: 36.8175 },
     rating: 4.9,
     reviewCount: 212,
     bookings: 580,
@@ -148,6 +154,7 @@ export const PROVIDERS: Provider[] = [
     slug: 'slim-barbers',
     category: 'barbers',
     location: 'Westlands',
+    coordinates: { lat: -1.2562, lng: 36.8021 },
     rating: 4.7,
     reviewCount: 98,
     bookings: 310,
@@ -182,6 +189,7 @@ export const PROVIDERS: Provider[] = [
     slug: 'blade-room',
     category: 'barbers',
     location: 'Karen',
+    coordinates: { lat: -1.3220, lng: 36.7102 },
     rating: 4.8,
     reviewCount: 156,
     bookings: 420,
@@ -217,6 +225,7 @@ export const PROVIDERS: Provider[] = [
     slug: 'zuri-hair-studio',
     category: 'hair-stylists',
     location: 'Kilimani',
+    coordinates: { lat: -1.2950, lng: 36.7650 },
     rating: 4.9,
     reviewCount: 289,
     bookings: 620,
@@ -253,6 +262,7 @@ export const PROVIDERS: Provider[] = [
     slug: 'glam-house',
     category: 'hair-stylists',
     location: 'Lavington',
+    coordinates: { lat: -1.2638, lng: 36.7805 },
     rating: 4.6,
     reviewCount: 167,
     bookings: 390,
@@ -288,6 +298,7 @@ export const PROVIDERS: Provider[] = [
     slug: 'nailhaus',
     category: 'nail-techs',
     location: 'Ngong Road',
+    coordinates: { lat: -1.2877, lng: 36.7480 },
     rating: 4.8,
     reviewCount: 203,
     bookings: 510,
@@ -324,6 +335,7 @@ export const PROVIDERS: Provider[] = [
     slug: 'beat-by-adaeze',
     category: 'makeup-artists',
     location: 'Parklands',
+    coordinates: { lat: -1.2680, lng: 36.8025 },
     rating: 5.0,
     reviewCount: 97,
     bookings: 180,
@@ -360,6 +372,7 @@ export const PROVIDERS: Provider[] = [
     slug: 'lense-by-odhis',
     category: 'photographers',
     location: 'Muthaiga',
+    coordinates: { lat: -1.2420, lng: 36.8120 },
     rating: 4.9,
     reviewCount: 142,
     bookings: 260,
@@ -396,6 +409,7 @@ export const PROVIDERS: Provider[] = [
     slug: 'ink-and-soul',
     category: 'tattoo-artists',
     location: 'Westlands',
+    coordinates: { lat: -1.2535, lng: 36.7980 },
     rating: 4.8,
     reviewCount: 89,
     bookings: 310,

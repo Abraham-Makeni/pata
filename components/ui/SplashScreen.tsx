@@ -26,7 +26,7 @@ export default function SplashScreen() {
           PATA
         </h1>
         <p className="text-stone-400 text-[13px] tracking-[4px] uppercase font-light text-center mt-2">
-          Find Your Style
+          Get Things Done
         </p>
       </div>
       <div

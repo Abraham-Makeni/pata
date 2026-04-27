@@ -27,7 +27,7 @@ export default function HomePage() {
 
       {/* Hero */}
       <div className="bg-ink px-5 pt-7 pb-7">
-        <p className="text-stone-400 text-[13px] mb-1">Good afternoon, Amara 👋</p>
+        <p className="text-stone-400 text-[13px] mb-1">Good afternoon, Brandon 👋</p>
         <h1 className="font-serif text-white text-[30px] font-semibold leading-tight">
           What are you<br />looking for today?
         </h1>

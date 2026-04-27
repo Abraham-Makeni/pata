@@ -1,7 +1,7 @@
 {
   "name": "pata",
   "version": "1.0.0",
-  "description": "PATA – Find Your Style. Local service discovery & booking.",
+  "description": "PATA – Get Things Done. Local service discovery & booking.",
   "private": true,
   "scripts": {
     "dev": "next dev",

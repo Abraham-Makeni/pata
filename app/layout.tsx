@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'PATA – Find Your Style',
+  title: 'PATA – Get Things Done',
   description: 'Discover and book top local service providers in Nairobi. Barbers, hair stylists, makeup artists, photographers and more.',
 }
 

@@ -46,15 +46,35 @@ export default function HomePage() {
       <section className="px-5 pt-6 pb-2">
         <h2 className="font-serif text-[22px] font-medium mb-4">Categories</h2>
         <div className="grid grid-cols-3 gap-3">
-          {CATEGORIES.map(cat => (
-            <Link key={cat.id} href={`/listing?category=${cat.id}`}>
-              <div className="bg-stone-100 rounded-2xl p-4 flex flex-col items-center gap-2 text-center cursor-pointer
-                hover:bg-ink hover:text-white group transition-all duration-200">
-                <span className="text-[28px] group-hover:grayscale">{cat.emoji}</span>
-                <span className="text-[12px] font-medium leading-tight">{cat.name}</span>
-              </div>
-            </Link>
-          ))}
+          {CATEGORIES.map(cat => {
+            const getImageSrc = (categoryId: string) => {
+              const imageMap: { [key: string]: string } = {
+                'barbers': '/barber.jpg',
+                'hair-stylists': '/hair-stylist.jpg',
+                'tattoo-artists': '/tattoo-artist.jpg',
+                'nail-techs': '/nail-tech.jpg',
+                'makeup-artists': '/makeup-artist.jpg',
+                'photographers': '/photographer.jpg'
+              }
+              return imageMap[categoryId] || ''
+            }
+            
+            return (
+              <Link key={cat.id} href={`/listing?category=${cat.id}`}>
+                <div className="bg-stone-100 rounded-2xl p-4 flex flex-col items-center gap-2 text-center cursor-pointer
+                  hover:bg-ink hover:text-white group transition-all duration-200">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden">
+                    <img 
+                      src={getImageSrc(cat.id)} 
+                      alt={cat.name}
+                      className="w-full h-full object-cover group-hover:grayscale transition-all duration-200"
+                    />
+                  </div>
+                  <span className="text-[12px] font-medium leading-tight">{cat.name}</span>
+                </div>
+              </Link>
+            )
+          })}
         </div>
       </section>
 

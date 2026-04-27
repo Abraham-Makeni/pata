@@ -18,6 +18,7 @@ export type Provider = {
   name: string
   slug: string
   emoji: string
+  image: string
   specialty: string
   category: string
   location: string
@@ -53,7 +54,7 @@ export const CATEGORIES: Category[] = [
 
 export const PROVIDERS: Provider[] = [
   {
-    id: '1', name: 'Kevo Cuts', slug: 'kevo-cuts', emoji: '✂️',
+    id: '1', name: 'Kevo Cuts', slug: 'kevo-cuts', emoji: '✂️', image: '/kevo-cuts.jpg',
     specialty: 'Fades & Line-ups', category: 'barbers', location: 'Nairobi CBD',
     rating: 4.9, reviewCount: 212, bookings: 580, startingPrice: 350,
     tags: ['Fades', 'Line-ups', 'Beard', 'Kids'],
@@ -74,7 +75,7 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '2', name: 'Slim Barbers', slug: 'slim-barbers', emoji: '💈',
+    id: '2', name: 'Slim Barbers', slug: 'slim-barbers', emoji: '💈', image: '/slim-barbers.jpg',
     specialty: 'Classic & Modern Cuts', category: 'barbers', location: 'Westlands',
     rating: 4.7, reviewCount: 98, bookings: 310, startingPrice: 400,
     tags: ['Classic', 'Modern', 'Kids', 'Shave'],
@@ -94,7 +95,7 @@ export const PROVIDERS: Provider[] = [
     verified: true,
   },
   {
-    id: '3', name: 'The Blade Room', slug: 'blade-room', emoji: '🪒',
+    id: '3', name: 'The Blade Room', slug: 'blade-room', emoji: '🪒', image: '/blade-room.jpg',
     specialty: 'Premium Grooming', category: 'barbers', location: 'Karen',
     rating: 4.8, reviewCount: 156, bookings: 420, startingPrice: 800,
     tags: ['Premium', 'Beard', 'Hot Towel', 'Luxury'],
@@ -113,7 +114,7 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '4', name: 'Zuri Hair Studio', slug: 'zuri-hair-studio', emoji: '💇',
+    id: '4', name: 'Zuri Hair Studio', slug: 'zuri-hair-studio', emoji: '💇', image: '/zuri-hair-studio.jpg',
     specialty: 'Natural Hair & Braids', category: 'hair-stylists', location: 'Kilimani',
     rating: 4.9, reviewCount: 289, bookings: 620, startingPrice: 1200,
     tags: ['Natural', 'Braids', 'Locs', 'Protective'],
@@ -133,7 +134,7 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '5', name: 'Glam House', slug: 'glam-house', emoji: '🌟',
+    id: '5', name: 'Glam House', slug: 'glam-house', emoji: '🌟', image: '/glam-house.jpg',
     specialty: 'Weaves & Color', category: 'hair-stylists', location: 'Lavington',
     rating: 4.6, reviewCount: 167, bookings: 390, startingPrice: 2500,
     tags: ['Weaves', 'Color', 'Balayage', 'Relaxer'],
@@ -153,7 +154,7 @@ export const PROVIDERS: Provider[] = [
     verified: true,
   },
   {
-    id: '6', name: 'Nailhaus', slug: 'nailhaus', emoji: '💅',
+    id: '6', name: 'Nailhaus', slug: 'nailhaus', emoji: '💅', image: '/nailhaus.jpg',
     specialty: 'Nail Art & Gel', category: 'nail-techs', location: 'Ngong Road',
     rating: 4.8, reviewCount: 203, bookings: 510, startingPrice: 800,
     tags: ['Gel', 'Nail Art', 'Acrylics', 'SNS'],
@@ -173,7 +174,7 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '7', name: 'Beat by Adaeze', slug: 'beat-by-adaeze', emoji: '💄',
+    id: '7', name: 'Beat by Adaeze', slug: 'beat-by-adaeze', emoji: '💄', image: '/beat-by-adaeze.jpg',
     specialty: 'Bridal & Editorial', category: 'makeup-artists', location: 'Parklands',
     rating: 5.0, reviewCount: 97, bookings: 180, startingPrice: 3500,
     tags: ['Bridal', 'Editorial', 'Glam', 'Airbrush'],
@@ -193,7 +194,7 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '8', name: 'Lense by Odhis', slug: 'lense-by-odhis', emoji: '📷',
+    id: '8', name: 'Lense by Odhis', slug: 'lense-by-odhis', emoji: '📷', image: '/lense-by-odhis.jpg',
     specialty: 'Portrait & Lifestyle', category: 'photographers', location: 'Muthaiga',
     rating: 4.9, reviewCount: 142, bookings: 260, startingPrice: 5000,
     tags: ['Portrait', 'Lifestyle', 'Events', 'Corporate'],
@@ -213,7 +214,7 @@ export const PROVIDERS: Provider[] = [
     verified: true, featured: true,
   },
   {
-    id: '9', name: 'Ink & Soul', slug: 'ink-and-soul', emoji: '🖊️',
+    id: '9', name: 'Ink & Soul', slug: 'ink-and-soul', emoji: '🖊️', image: '/ink-and-soul.jpg',
     specialty: 'Fine Line & Illustrative', category: 'tattoo-artists', location: 'Westlands',
     rating: 4.8, reviewCount: 89, bookings: 310, startingPrice: 2000,
     tags: ['Fine Line', 'Illustrative', 'Color', 'Blackwork'],

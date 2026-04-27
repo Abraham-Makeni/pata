@@ -22,8 +22,13 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
     <div className="min-h-screen bg-chalk">
       {/* Cover */}
       <div className="relative">
-        <div className="h-[220px] bg-gradient-to-br from-ink to-stone-600 flex items-center justify-center text-[72px]">
-          {p.emoji}
+        <div className="h-[220px] relative">
+          <img 
+            src={p.image} 
+            alt={p.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-ink/80 to-stone-600/80"></div>
         </div>
         {/* Back btn */}
         <button
@@ -33,8 +38,12 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
           ←
         </button>
         {/* Avatar */}
-        <div className="absolute -bottom-10 left-5 w-20 h-20 rounded-[18px] bg-stone-100 border-[3px] border-chalk flex items-center justify-center text-4xl shadow-lg">
-          {p.emoji}
+        <div className="absolute -bottom-10 left-5 w-20 h-20 rounded-[18px] overflow-hidden border-[3px] border-chalk shadow-lg">
+          <img 
+            src={p.image} 
+            alt={p.name}
+            className="w-full h-full object-cover"
+          />
         </div>
       </div>
 

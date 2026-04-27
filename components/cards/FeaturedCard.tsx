@@ -7,8 +7,12 @@ export default function FeaturedCard({ provider: p }: { provider: Provider }) {
     <Link href={`/profile/${p.id}`}>
       <div className="w-[180px] rounded-2xl overflow-hidden bg-stone-100 cursor-pointer hover:scale-[1.02] transition-transform duration-200 flex-shrink-0">
         {/* Image area */}
-        <div className="w-full h-[130px] bg-gradient-to-br from-stone-200 to-stone-300 flex items-center justify-center text-5xl relative">
-          {p.emoji}
+        <div className="w-full h-[130px] relative">
+          <img 
+            src={p.image} 
+            alt={p.name}
+            className="w-full h-full object-cover"
+          />
           <div className="absolute top-2 right-2 bg-white rounded-full px-2 py-0.5 text-[11px] font-semibold flex items-center gap-0.5">
             ⭐ {p.rating}
           </div>

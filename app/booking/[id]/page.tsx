@@ -67,8 +67,12 @@ export default function BookingPage({ params }: { params: { id: string } }) {
       <div className="px-5 pb-10">
         {/* Provider header */}
         <div className="flex items-center gap-3 py-4 border-b border-stone-100 mb-5">
-          <div className="w-12 h-12 rounded-xl bg-stone-100 flex items-center justify-center text-2xl">
-            {provider.emoji}
+          <div className="w-12 h-12 rounded-xl overflow-hidden">
+            <img 
+              src={provider.image} 
+              alt={provider.name}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
             <p className="font-semibold text-[15px]">{provider.name}</p>

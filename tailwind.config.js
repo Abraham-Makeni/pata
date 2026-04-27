@@ -7,21 +7,23 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
-        serif: ['var(--font-playfair)', 'Georgia', 'serif'],
+        sans: ['var(--font-samsung-one)'],
+        serif: ['Georgia', 'serif'],
       },
       colors: {
-        ink: '#0a0a0a',
-        chalk: '#fafafa',
-        stone: {
-          50: '#f9f9f7',
-          100: '#f4f4f2',
-          200: '#e8e8e4',
-          300: '#d0d0ca',
-          400: '#a8a8a0',
-          500: '#6c6c64',
-          600: '#4a4a44',
-          700: '#2e2e2a',
+        black: '#000000',
+        white: '#ffffff',
+        gray: {
+          50: '#f9fafb',
+          100: '#f3f4f6',
+          200: '#e5e7eb',
+          300: '#d1d5db',
+          400: '#9ca3af',
+          500: '#6b7280',
+          600: '#4b5563',
+          700: '#374151',
+          800: '#1f2937',
+          900: '#111827',
         },
       },
       animation: {

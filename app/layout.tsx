@@ -47,15 +47,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Playfair+Display:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Samsung+One:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
         
         {/* Meta Tags */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <meta name="theme-color" content="#0a0a0a" />
+        <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className="bg-chalk text-ink antialiased max-w-[480px] mx-auto min-h-screen relative">
+      <body className="bg-white text-black antialiased max-w-[480px] mx-auto min-h-screen relative">
         {children}
       </body>
     </html>

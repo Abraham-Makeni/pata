@@ -4,11 +4,10 @@ import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import ProviderCard from '@/components/cards/ProviderCard'
 import { ProviderCardSkeleton } from '@/components/ui/Skeletons'
-import { CATEGORIES, PROVIDERS, getProvidersByCategory, calculateDistance } from '@/lib/data'
+import { CATEGORIES, PROVIDERS, getProvidersByCategory } from '@/lib/data'
 
 const SORT_OPTIONS = ['All', '4.5+ Stars', 'Verified Only', 'KSh 0–1K', 'KSh 1K–5K', 'Premium']
 const LOCATIONS   = ['All Areas', 'Nairobi CBD', 'Westlands', 'Kilimani', 'Karen', 'Lavington']
-const DISTANCES   = ['Any Distance', 'Within 1km', 'Within 3km', 'Within 5km', 'Within 10km']
 
 function ListingContent() {
   const searchParams = useSearchParams()
@@ -17,7 +16,6 @@ function ListingContent() {
 
   const [activeSort, setActiveSort]   = useState('All')
   const [activeLoc,  setActiveLoc]    = useState('All Areas')
-  const [activeDist, setActiveDist]  = useState('Any Distance')
 
   const baseList = categoryId ? getProvidersByCategory(categoryId) : PROVIDERS
 
@@ -32,16 +30,7 @@ function ListingContent() {
 
     const locOk = activeLoc === 'All Areas' || p.location === activeLoc
     
-    // Distance calculation from Nairobi CBD
-    const distance = calculateDistance(-1.2921, 36.8219, p.coordinates.lat, p.coordinates.lng)
-    const distOk = 
-      activeDist === 'Any Distance' ? true :
-      activeDist === 'Within 1km'   ? distance <= 1 :
-      activeDist === 'Within 3km'   ? distance <= 3 :
-      activeDist === 'Within 5km'   ? distance <= 5 :
-      activeDist === 'Within 10km'  ? distance <= 10 : true
-    
-    return sortOk && locOk && distOk
+    return sortOk && locOk
   })
 
   return (
@@ -96,23 +85,7 @@ function ListingContent() {
         ))}
       </div>
 
-      {/* Distance chips */}
-      <div className="flex gap-2 overflow-x-auto px-5 py-2.5 snap-scroll border-b border-stone-100">
-        {DISTANCES.map(d => (
-          <button
-            key={d}
-            onClick={() => setActiveDist(d)}
-            className={`px-3.5 py-1.5 rounded-full text-[12px] font-medium border whitespace-nowrap transition-all flex-shrink-0
-              ${activeDist === d
-                ? 'bg-green-600 text-chalk border-green-600'
-                : 'bg-white text-stone-500 border-stone-200 hover:border-stone-400'
-              }`}
-          >
-            📏 {d}
-          </button>
-        ))}
-      </div>
-
+      
       {/* Results */}
       <div className="px-5 py-4 space-y-3">
         <p className="text-[12px] text-stone-400 font-medium mb-1">

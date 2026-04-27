@@ -17,7 +17,7 @@ export default function GlobalErrorBoundary({ children }: GlobalErrorBoundaryPro
               Application Error
             </h1>
             <p className="text-sm text-stone-600 mb-6">
-              Something went wrong with the application. This has been logged and we'll look into it.
+              Something went wrong with the application. This has been logged and we&apos;ll look into it.
             </p>
             {error && (
               <details className="text-left mb-4 p-3 bg-stone-50 rounded-lg">

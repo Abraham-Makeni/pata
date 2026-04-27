@@ -22,7 +22,7 @@ export default function ProviderCard({ provider: p }: { provider: Provider }) {
             <div>
               <p className="font-semibold text-[15px] leading-tight">{p.name}</p>
               <p className="text-stone-500 text-xs mt-0.5">{p.specialty} · {p.location}</p>
-                          </div>
+            </div>
             {p.verified && (
               <span className="text-xs bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-medium flex-shrink-0">
                 ✓ Verified

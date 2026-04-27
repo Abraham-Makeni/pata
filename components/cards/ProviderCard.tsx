@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Provider } from '@/lib/data'
 import StarRating from '@/components/ui/StarRating'
+import { ProviderAvatar } from '@/components/ui/OptimizedImage'
 
 export default function ProviderCard({ provider: p }: { provider: Provider }) {
   
@@ -8,13 +9,12 @@ export default function ProviderCard({ provider: p }: { provider: Provider }) {
     <Link href={`/profile/${p.id}`}>
       <div className="bg-white border border-stone-200 rounded-2xl p-4 flex gap-3 hover:border-ink hover:shadow-lg transition-all duration-200 cursor-pointer">
         {/* Avatar */}
-        <div className="w-[68px] h-[68px] rounded-xl overflow-hidden flex-shrink-0">
-          <img 
-            src={p.image} 
-            alt={p.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <ProviderAvatar
+          src={p.image}
+          alt={p.name}
+          size={68}
+          fallbackSrc="/api/placeholder/68/68"
+        />
 
         {/* Info */}
         <div className="flex-1 min-w-0">

@@ -1,4 +1,3 @@
-'use client'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -131,8 +130,8 @@ export default function TermsPage() {
                 <li>Once you add: Payments, Real providers, Real disputes</li>
                 <li>You should get a Kenyan legal review</li>
               </ul>
-              <p className="text-stone-700 font-medium mt-2">Most startups ignore this until it's too late.</p>
-              <p className="text-stone-600">You didn't. That already puts you ahead.</p>
+              <p className="text-stone-700 font-medium mt-2">Most startups ignore this until it&apos;s too late.</p>
+              <p className="text-stone-600">You didn&apos;t. That already puts you ahead.</p>
             </section>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Provider } from '@/lib/data'
 import StarRating from '@/components/ui/StarRating'
+import { OptimizedImage } from '@/components/ui/OptimizedImage'
 
 export default function FeaturedCard({ provider: p }: { provider: Provider }) {
   
@@ -9,10 +10,14 @@ export default function FeaturedCard({ provider: p }: { provider: Provider }) {
       <div className="w-[180px] rounded-2xl overflow-hidden bg-stone-100 cursor-pointer hover:scale-[1.02] transition-transform duration-200 flex-shrink-0">
         {/* Image area */}
         <div className="w-full h-[130px] relative">
-          <img 
-            src={p.image} 
+          <OptimizedImage
+            src={p.image}
             alt={p.name}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            sizes="180px"
+            priority
+            fallbackSrc="/api/placeholder/180/130"
           />
           <div className="absolute top-2 right-2 bg-white rounded-full px-2 py-0.5 text-[11px] font-semibold flex items-center gap-0.5">
             ★ {p.rating}

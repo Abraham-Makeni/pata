@@ -1,4 +1,3 @@
-'use client'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -25,7 +24,7 @@ export default function PrivacyPage() {
               <ul className="list-disc list-inside ml-4 space-y-2">
                 <li><strong>a) Personal Info:</strong> Name, Email, Phone number</li>
                 <li><strong>b) Usage Data:</strong> Pages visited, Interactions, Device/browser info</li>
-                <li><strong>c) Location Data:</strong> Approximate location (for "near you" features)</li>
+                <li><strong>c) Location Data:</strong> Approximate location (for &quot;near you&quot; features)</li>
               </ul>
             </section>
 
@@ -85,7 +84,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h3 className="font-medium text-ink mb-2">8. Children's Privacy</h3>
+              <h3 className="font-medium text-ink mb-2">8. Children&apos;s Privacy</h3>
               <p>PATA is not intended for children under 13.</p>
             </section>
 

@@ -73,10 +73,43 @@ export default function MapView({
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null)
   const [map, setMap] = useState<google.maps.Map | null>(null)
 
-  const { isLoaded } = useJsApiLoader({
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
+  // Don't even try to load maps if no API key is provided
+  if (!apiKey) {
+    return (
+      <div 
+        className="bg-stone-100 rounded-2xl flex flex-col items-center justify-center text-center p-6"
+        style={{ height }}
+      >
+        <div className="text-3xl mb-3">🗺️</div>
+        <div className="text-stone-500 text-sm mb-2">Map unavailable</div>
+        <div className="text-xs text-stone-400 max-w-[200px]">
+          Google Maps API key is required to display maps
+        </div>
+      </div>
+    )
+  }
+
+  const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+    googleMapsApiKey: apiKey,
   })
+
+  if (loadError) {
+    return (
+      <div 
+        className="bg-stone-100 rounded-2xl flex flex-col items-center justify-center text-center p-6"
+        style={{ height }}
+      >
+        <div className="text-3xl mb-3">🗺️</div>
+        <div className="text-stone-500 text-sm mb-2">Unable to load map</div>
+        <div className="text-xs text-stone-400 max-w-[200px]">
+          Check your internet connection or API key configuration
+        </div>
+      </div>
+    )
+  }
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map)

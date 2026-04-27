@@ -1,3 +1,5 @@
+'use client'
+
 interface ChatMessageProps {
   message: {
     id: string

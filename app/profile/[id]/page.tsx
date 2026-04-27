@@ -277,9 +277,9 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
         <ChatDrawer
           isOpen={isChatOpen}
           onClose={() => setIsChatOpen(false)}
-          providerId={p.id}
-          providerName={p.name}
-          providerPhone={p.phone}
+          providerId={provider.id}
+          providerName={provider.name}
+          providerPhone={provider.phone}
         />
       )}
     </div>

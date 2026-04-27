@@ -53,7 +53,6 @@ export const useChatStore = create<ChatState>()(
           chat: {
             ...state.chat,
             [providerId]: {
-              ...state.chat[providerId],
               messages: [...(state.chat[providerId]?.messages || []), newMessage],
               isTyping: false,
             },
@@ -96,7 +95,6 @@ export const useChatStore = create<ChatState>()(
           chat: {
             ...state.chat,
             [providerId]: {
-              ...state.chat[providerId],
               messages: [...(state.chat[providerId]?.messages || []), providerMessage],
               isTyping: false,
             },

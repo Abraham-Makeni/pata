@@ -30,14 +30,15 @@ export const useLocationStore = create<LocationState>()(
       setError: (error) => set({ error }),
 
       fetchUserLocation: async () => {
-        const { isLoading, error, setLoading, setError, setUserLocation, setLocationPermission } = get()
-        
-        if (isLoading) return
-
-        setLoading(true)
-        setError(null)
-
         try {
+          const { isLoading } = get()
+          
+          if (isLoading) return
+
+          const { setLoading, setError, setUserLocation, setLocationPermission } = get()
+          setLoading(true)
+          setError(null)
+
           const location = await getUserLocation()
           
           if (location) {
@@ -45,7 +46,7 @@ export const useLocationStore = create<LocationState>()(
             setLocationPermission('granted')
           } else {
             // Check if we can determine the reason for failure
-            if (!navigator.geolocation) {
+            if (typeof navigator !== 'undefined' && !navigator.geolocation) {
               setError('Geolocation is not supported by your browser')
               setLocationPermission('denied')
             } else {
@@ -55,9 +56,11 @@ export const useLocationStore = create<LocationState>()(
           }
         } catch (err) {
           const errorMessage = err instanceof Error ? err.message : 'Failed to get location'
+          const { setError, setLocationPermission, setLoading } = get()
           setError(errorMessage)
           setLocationPermission('denied')
         } finally {
+          const { setLoading } = get()
           setLoading(false)
         }
       },

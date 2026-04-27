@@ -9,7 +9,7 @@ interface ChatDrawerProps {
   onClose: () => void
   providerId: string
   providerName: string
-  providerPhone: string
+  providerPhone?: string
 }
 
 export default function ChatDrawer({ 
@@ -33,7 +33,10 @@ export default function ChatDrawer({
   }
 
   const handleWhatsApp = () => {
-    const whatsappUrl = `https://wa.me/${providerPhone.replace(/\D/g, '')}?text=Hi, I found you on PATA`
+    if (!providerPhone) return
+    const cleanPhone = providerPhone.replace(/\D/g, '')
+    if (!cleanPhone) return
+    const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi, I found you on PATA`
     window.open(whatsappUrl, '_blank')
   }
 

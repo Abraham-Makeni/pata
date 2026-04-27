@@ -60,8 +60,7 @@ export function OptimizedImage({
   // Generate blur data URL for better perceived performance
   const generateBlurDataURL = (imageSrc: string): string => {
     // Simple blur placeholder - in production, you'd want to generate this properly
-    return `data:image/svg+xml;base64,${Buffer.from(
-      `<svg width="${width || 400}" height="${height || 300}" xmlns="http://www.w3.org/2000/svg">
+    const svgString = `<svg width="${width || 400}" height="${height || 300}" xmlns="http://www.w3.org/2000/svg">
         <rect width="100%" height="100%" fill="#f3f4f6"/>
         <rect width="100%" height="100%" fill="url(#gradient)" opacity="0.4"/>
         <defs>
@@ -71,7 +70,14 @@ export function OptimizedImage({
           </linearGradient>
         </defs>
       </svg>`
-    ).toString('base64')}`
+    
+    // Use browser-compatible base64 encoding
+    if (typeof window !== 'undefined') {
+      return `data:image/svg+xml;base64,${btoa(svgString)}`
+    }
+    
+    // Fallback for server-side
+    return `data:image/svg+xml,${encodeURIComponent(svgString)}`
   }
 
   const imageProps = {

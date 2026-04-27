@@ -14,7 +14,6 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
 
   // Handle phone call
   const handlePhoneCall = () => {
-    console.log('Phone call clicked', provider?.phone)
     if (provider?.phone) {
       window.location.href = `tel:${provider.phone}`
     }
@@ -22,7 +21,6 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
 
   // Handle WhatsApp
   const handleWhatsApp = () => {
-    console.log('WhatsApp clicked', provider?.phone)
     if (provider?.phone) {
       const cleanPhone = provider.phone.replace(/\D/g, '')
       const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi, I found you on PATA`

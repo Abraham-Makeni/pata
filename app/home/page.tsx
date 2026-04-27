@@ -61,16 +61,16 @@ export default function HomePage() {
             
             return (
               <Link key={cat.id} href={`/listing?category=${cat.id}`}>
-                <div className="bg-stone-100 rounded-2xl p-4 flex flex-col items-center gap-2 text-center cursor-pointer
-                  hover:bg-ink hover:text-white group transition-all duration-200">
-                  <div className="w-12 h-12 rounded-xl overflow-hidden">
+                <div className="bg-stone-100 rounded-3xl p-5 flex flex-col items-center gap-3 text-center cursor-pointer
+                  hover:bg-ink hover:text-white group transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-lg">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden ring-2 ring-stone-200 group-hover:ring-white/30 transition-all duration-300">
                     <img 
                       src={getImageSrc(cat.id)} 
                       alt={cat.name}
-                      className="w-full h-full object-cover group-hover:grayscale transition-all duration-200"
+                      className="w-full h-full object-cover group-hover:grayscale transition-all duration-300"
                     />
                   </div>
-                  <span className="text-[12px] font-medium leading-tight">{cat.name}</span>
+                  <span className="text-[13px] font-semibold leading-tight">{cat.name}</span>
                 </div>
               </Link>
             )

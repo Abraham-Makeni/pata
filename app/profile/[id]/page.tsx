@@ -8,7 +8,7 @@ import { ProfileSkeleton } from '@/components/ui/Skeletons'
 import dynamic from 'next/dynamic'
 import { getDirectionsUrl } from '@/lib/location'
 
-// Dynamically import MapView for performance
+// Dynamically import MapView and ChatDrawer for performance
 const MapView = dynamic(() => import('@/components/map/MapView'), {
   loading: () => (
     <div className="h-[200px] bg-stone-100 rounded-2xl flex items-center justify-center">
@@ -18,10 +18,15 @@ const MapView = dynamic(() => import('@/components/map/MapView'), {
   ssr: false,
 })
 
+const ChatDrawer = dynamic(() => import('@/components/chat/ChatDrawer'), {
+  ssr: false,
+})
+
 export default function ProfilePage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [provider, setProvider] = useState<Provider | null>(null)
+  const [isChatOpen, setIsChatOpen] = useState(false)
 
   useEffect(() => {
     // Simulate loading and fetch provider data
@@ -256,6 +261,27 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
           Book Now
         </Link>
       </div>
+
+      {/* Floating Chat Button */}
+      <button
+        onClick={() => setIsChatOpen(true)}
+        className="fixed bottom-24 right-5 w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-all hover:scale-105 z-30"
+      >
+        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+        </svg>
+      </button>
+
+      {/* Chat Drawer */}
+      {provider && (
+        <ChatDrawer
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
+          providerId={p.id}
+          providerName={p.name}
+          providerPhone={p.phone}
+        />
+      )}
     </div>
   )
 }

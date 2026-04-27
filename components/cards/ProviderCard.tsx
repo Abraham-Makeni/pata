@@ -1,14 +1,8 @@
 import Link from 'next/link'
-import { Provider, calculateDistance } from '@/lib/data'
+import { Provider } from '@/lib/data'
 import StarRating from '@/components/ui/StarRating'
 
 export default function ProviderCard({ provider: p }: { provider: Provider }) {
-  // Calculate distance from Nairobi CBD
-  const distance = calculateDistance(
-    -1.2921, 36.8219, // Nairobi CBD
-    p.coordinates.lat, 
-    p.coordinates.lng
-  )
   
   return (
     <Link href={`/profile/${p.id}`}>
@@ -28,15 +22,7 @@ export default function ProviderCard({ provider: p }: { provider: Provider }) {
             <div>
               <p className="font-semibold text-[15px] leading-tight">{p.name}</p>
               <p className="text-stone-500 text-xs mt-0.5">{p.specialty} · {p.location}</p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-[10px] text-stone-400">📍 {distance.toFixed(1)} km away</span>
-                {distance <= 2 && (
-                  <span className="text-[10px] bg-ink/10 text-ink px-1.5 py-0.5 rounded-full font-medium">
-                    Near you
-                  </span>
-                )}
-              </div>
-            </div>
+                          </div>
             {p.verified && (
               <span className="text-xs bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-medium flex-shrink-0">
                 ✓ Verified

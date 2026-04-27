@@ -1,14 +1,8 @@
 import Link from 'next/link'
-import { Provider, calculateDistance } from '@/lib/data'
+import { Provider } from '@/lib/data'
 import StarRating from '@/components/ui/StarRating'
 
 export default function FeaturedCard({ provider: p }: { provider: Provider }) {
-  // Calculate distance from Nairobi CBD
-  const distance = calculateDistance(
-    -1.2921, 36.8219, // Nairobi CBD
-    p.coordinates.lat, 
-    p.coordinates.lng
-  )
   
   return (
     <Link href={`/profile/${p.id}`}>
@@ -23,12 +17,7 @@ export default function FeaturedCard({ provider: p }: { provider: Provider }) {
           <div className="absolute top-2 right-2 bg-white rounded-full px-2 py-0.5 text-[11px] font-semibold flex items-center gap-0.5">
             ★ {p.rating}
           </div>
-          {distance <= 2 && (
-            <div className="absolute top-2 left-2 bg-ink text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
-              Near you
-            </div>
-          )}
-        </div>
+                  </div>
         {/* Body */}
         <div className="p-3">
           <p className="font-semibold text-[13px] leading-tight">{p.name}</p>
@@ -44,11 +33,7 @@ export default function FeaturedCard({ provider: p }: { provider: Provider }) {
               <span>👥</span>
               <span>{p.repeatClients}</span>
             </span>
-            <span className="flex items-center gap-0.5">
-              <span>📍</span>
-              <span>{distance.toFixed(1)} km</span>
-            </span>
-          </div>
+                      </div>
           
           <p className="font-semibold text-[12px] mt-1.5">
             From KSh {p.startingPrice.toLocaleString()}

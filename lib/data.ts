@@ -25,7 +25,6 @@ export type Provider = {
   category: string
   location: string
   phone: string
-  coordinates: { lat: number; lng: number }
   rating: number
   reviewCount: number
   bookings: number
@@ -62,8 +61,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: '1', name: 'Kevo Cuts', slug: 'kevo-cuts', emoji: '', image: '/kevo-cuts.jpg',
     specialty: 'Fades & Line-ups', category: 'barbers', location: 'Nairobi CBD',
-    phone: '+254712345678', coordinates: { lat: -1.2921, lng: 36.8219 },
-    rating: 4.9, reviewCount: 212, bookings: 580, bookedCount: 89, repeatClients: 156, startingPrice: 350,
+    phone: '+254712345678',     rating: 4.9, reviewCount: 212, bookings: 580, bookedCount: 89, repeatClients: 156, startingPrice: 350,
     tags: ['Fades', 'Line-ups', 'Beard', 'Kids'],
     about: "Nairobi's top fade specialist with 7 years of precision work. Kevo brings a global eye to local culture — trained in Johannesburg and London, now back home giving Nairobi its best cuts. Every client walks out looking like the main character.",
     gallery: ['','','','','','','','',''],
@@ -84,8 +82,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: '2', name: 'Slim Barbers', slug: 'slim-barbers', emoji: '', image: '/slim-barbers.jpg',
     specialty: 'Classic & Modern Cuts', category: 'barbers', location: 'Westlands',
-    phone: '+254723456789', coordinates: { lat: -1.2654, lng: 36.8084 },
-    rating: 4.7, reviewCount: 98, bookings: 310, bookedCount: 67, repeatClients: 89, startingPrice: 400,
+    phone: '+254723456789',     rating: 4.7, reviewCount: 98, bookings: 310, bookedCount: 67, repeatClients: 89, startingPrice: 400,
     tags: ['Classic', 'Modern', 'Kids', 'Shave'],
     about: "Family barbershop with 10+ years in Westlands. We welcome everyone from toddlers to grandfathers. Classic techniques with a modern finish. Always a warm, welcoming experience.",
     gallery: ['','','','','','','','',''],
@@ -105,8 +102,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: '3', name: 'The Blade Room', slug: 'blade-room', emoji: '', image: '/blade-room.jpg',
     specialty: 'Premium Grooming', category: 'barbers', location: 'Karen',
-    phone: '+254734567890', coordinates: { lat: -1.3164, lng: 36.7755 },
-    rating: 4.8, reviewCount: 156, bookings: 420, bookedCount: 78, repeatClients: 134, startingPrice: 800,
+    phone: '+254734567890',     rating: 4.8, reviewCount: 156, bookings: 420, bookedCount: 78, repeatClients: 134, startingPrice: 800,
     tags: ['Premium', 'Beard', 'Hot Towel', 'Luxury'],
     about: "Nairobi's most elevated barbershop experience. Hot towel shaves, premium Kenyan-sourced products, a curated playlist, and artisans who genuinely love their craft. Where grooming meets ritual.",
     gallery: ['','','','','','','','',''],
@@ -125,8 +121,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: '4', name: 'Zuri Hair Studio', slug: 'zuri-hair-studio', emoji: '', image: '/zuri-hair-studio.jpg',
     specialty: 'Natural Hair & Braids', category: 'hair-stylists', location: 'Kilimani',
-    phone: '+254745678901', coordinates: { lat: -1.2994, lng: 36.8142 },
-    rating: 4.9, reviewCount: 289, bookings: 620, bookedCount: 145, repeatClients: 198, startingPrice: 1200,
+    phone: '+254745678901',     rating: 4.9, reviewCount: 289, bookings: 620, bookedCount: 145, repeatClients: 198, startingPrice: 1200,
     tags: ['Natural', 'Braids', 'Locs', 'Protective'],
     about: "Celebrating the crown. A safe space for natural African hair. Specialised in protective styles, loc journeys, chemical-free treatments, and big chops done with love and precision.",
     gallery: ['','','','','','','','',''],
@@ -146,8 +141,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: '5', name: 'Glam House', slug: 'glam-house', emoji: '', image: '/glam-house.jpg',
     specialty: 'Weaves & Color', category: 'hair-stylists', location: 'Lavington',
-    phone: '+254756789012', coordinates: { lat: -1.2996, lng: 36.8108 },
-    rating: 4.6, reviewCount: 167, bookings: 390, bookedCount: 89, repeatClients: 123, startingPrice: 2500,
+    phone: '+254756789012',     rating: 4.6, reviewCount: 167, bookings: 390, bookedCount: 89, repeatClients: 123, startingPrice: 2500,
     tags: ['Weaves', 'Color', 'Balayage', 'Relaxer'],
     about: "Full-service glam salon specialising in weave installations, balayage, and color corrections. International trends, Nairobi-rooted — with your hair health always the priority.",
     gallery: ['','','','','','','','',''],
@@ -167,8 +161,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: '6', name: 'Nailhaus', slug: 'nailhaus', emoji: '', image: '/nailhaus.jpg',
     specialty: 'Nail Art & Gel', category: 'nail-techs', location: 'Ngong Road',
-    phone: '+254767890123', coordinates: { lat: -1.3026, lng: 36.8218 },
-    rating: 4.8, reviewCount: 203, bookings: 510, bookedCount: 112, repeatClients: 167, startingPrice: 800,
+    phone: '+254767890123',     rating: 4.8, reviewCount: 203, bookings: 510, bookedCount: 112, repeatClients: 167, startingPrice: 800,
     tags: ['Gel', 'Nail Art', 'Acrylics', 'SNS'],
     about: "Creative nail studio where every set is a piece of art. From clean minimalism to bold Afro-inspired nail art. Using only premium, long-lasting products.",
     gallery: ['','','','','','','','',''],
@@ -188,8 +181,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: '7', name: 'Beat by Adaeze', slug: 'beat-by-adaeze', emoji: '', image: '/beat-by-adaeze.jpg',
     specialty: 'Bridal & Editorial', category: 'makeup-artists', location: 'Parklands',
-    phone: '+254778901234', coordinates: { lat: -1.2636, lng: 36.8042 },
-    rating: 5.0, reviewCount: 97, bookings: 180, bookedCount: 45, repeatClients: 78, startingPrice: 3500,
+    phone: '+254778901234',     rating: 5.0, reviewCount: 97, bookings: 180, bookedCount: 45, repeatClients: 78, startingPrice: 3500,
     tags: ['Bridal', 'Editorial', 'Glam', 'Airbrush'],
     about: "Award-winning MUA with 8 years across Nairobi, Lagos, and London. Known for celebrating melanin beautifully — long-lasting, skin-first looks, always intentional. Your face is her canvas.",
     gallery: ['','','','','','','','',''],
@@ -209,8 +201,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: '8', name: 'Lense by Odhis', slug: 'lense-by-odhis', emoji: '', image: '/lense-by-odhis.jpg',
     specialty: 'Portrait & Lifestyle', category: 'photographers', location: 'Muthaiga',
-    phone: '+254789012345', coordinates: { lat: -1.2747, lng: 36.8154 },
-    rating: 4.9, reviewCount: 142, bookings: 260, bookedCount: 67, repeatClients: 89, startingPrice: 5000,
+    phone: '+254789012345',     rating: 4.9, reviewCount: 142, bookings: 260, bookedCount: 67, repeatClients: 89, startingPrice: 5000,
     tags: ['Portrait', 'Lifestyle', 'Events', 'Corporate'],
     about: "Visual storyteller capturing authentic Nairobi moments. Shot for leading Kenyan brands, international NGOs, and hundreds of individuals. Whether personal or corporate — every frame matters.",
     gallery: ['','','','','','','','',''],
@@ -230,8 +221,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: '9', name: 'Ink & Soul', slug: 'ink-and-soul', emoji: '', image: '/ink-and-soul.jpg',
     specialty: 'Fine Line & Illustrative', category: 'tattoo-artists', location: 'Westlands',
-    phone: '+254790123456', coordinates: { lat: -1.2655, lng: 36.8083 },
-    rating: 4.8, reviewCount: 89, bookings: 310, bookedCount: 56, repeatClients: 67, startingPrice: 2000,
+    phone: '+254790123456',     rating: 4.8, reviewCount: 89, bookings: 310, bookedCount: 56, repeatClients: 67, startingPrice: 2000,
     tags: ['Fine Line', 'Illustrative', 'Color', 'Blackwork'],
     about: "Tattoo studio celebrating African iconography and modern illustration. Every piece is custom-designed. No flash, no shortcuts. Clean studio, sterile equipment, artistry that lasts forever.",
     gallery: ['','','','','','','','',''],
@@ -272,38 +262,3 @@ export function getTrendingProviders(): Provider[] {
     .slice(0, 6)
 }
 
-// Calculate distance between two coordinates (in km)
-export function calculateDistance(
-  lat1: number, 
-  lng1: number, 
-  lat2: number, 
-  lng2: number
-): number {
-  const R = 6371 // Earth's radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180
-  const dLng = (lng2 - lng1) * Math.PI / 180
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    Math.sin(dLng/2) * Math.sin(dLng/2)
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-  return R * c
-}
-
-// Get providers near a location (mock user location: Nairobi CBD)
-export function getNearbyProviders(maxDistance: number = 5): Provider[] {
-  const userLocation = { lat: -1.2921, lng: 36.8219 } // Nairobi CBD
-  
-  return PROVIDERS
-    .map(provider => ({
-      ...provider,
-      distance: calculateDistance(
-        userLocation.lat, 
-        userLocation.lng, 
-        provider.coordinates.lat, 
-        provider.coordinates.lng
-      )
-    }))
-    .filter(p => p.distance <= maxDistance)
-    .sort((a, b) => a.distance - b.distance)
-}

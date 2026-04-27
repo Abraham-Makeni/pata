@@ -6,20 +6,34 @@ import FeaturedCard from '@/components/cards/FeaturedCard'
 import { FeaturedCardSkeleton } from '@/components/ui/Skeletons'
 import { CATEGORIES, FEATURED_PROVIDERS, PROVIDERS, getTrendingProviders, getProviderById, Provider } from '@/lib/data'
 import { useBookingStore } from '@/store/booking'
+import { useLocationStore } from '@/store/location'
+import { sortProvidersByDistance, getNearYouProviders } from '@/lib/location'
 
-const FILTER_TABS = ['All', 'Top Rated', 'New', 'Budget', 'Premium']
+const FILTER_TABS = ['All', 'Near You', 'Top Rated', 'New', 'Budget', 'Premium']
 
 export default function HomePage() {
   const [activeFilter, setActiveFilter] = useState('All')
   const [isLoading, setIsLoading] = useState(true)
   const { lastBookedProviderId } = useBookingStore()
+  const { userLocation, fetchUserLocation } = useLocationStore()
   const [lastBookedProvider, setLastBookedProvider] = useState<Provider | null>(null)
 
   // Get trending providers
   const trendingProviders = getTrendingProviders()
+  
+  // Get near you providers (within 2km) if location is available
+  const nearYouProviders = getNearYouProviders(PROVIDERS, userLocation)
+  
+  // Sort providers by distance if user location is available
+  const providersWithDistance = userLocation 
+    ? sortProvidersByDistance(PROVIDERS, userLocation)
+    : PROVIDERS
 
-  // Load last booked provider and simulate loading
+  // Load last booked provider, simulate loading, and fetch user location
   useEffect(() => {
+    // Fetch user location on app load
+    fetchUserLocation()
+    
     // Simulate initial loading
     const timer = setTimeout(() => {
       setIsLoading(false)
@@ -31,17 +45,19 @@ export default function HomePage() {
     }
 
     return () => clearTimeout(timer)
-  }, [lastBookedProviderId])
+  }, [lastBookedProviderId, fetchUserLocation])
 
   const filtered = activeFilter === 'All' 
     ? trendingProviders 
-    : PROVIDERS.filter(p => {
-        if (activeFilter === 'Top Rated') return p.rating >= 4.8
-        if (activeFilter === 'New')       return p.bookings < 300
-        if (activeFilter === 'Budget')    return p.startingPrice < 1000
-        if (activeFilter === 'Premium')   return p.startingPrice >= 3000
-        return true
-      }).slice(0, 8)
+    : activeFilter === 'Near You' && userLocation
+      ? nearYouProviders.slice(0, 8)
+      : providersWithDistance.filter(p => {
+          if (activeFilter === 'Top Rated') return p.rating >= 4.8
+          if (activeFilter === 'New')       return p.bookings < 300
+          if (activeFilter === 'Budget')    return p.startingPrice < 1000
+          if (activeFilter === 'Premium')   return p.startingPrice >= 3000
+          return true
+        }).slice(0, 8)
 
   return (
     <div className="min-h-screen bg-chalk">

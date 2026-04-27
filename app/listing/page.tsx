@@ -1,10 +1,22 @@
 'use client'
 import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import Navbar from '@/components/layout/Navbar'
 import ProviderCard from '@/components/cards/ProviderCard'
 import { ProviderCardSkeleton } from '@/components/ui/Skeletons'
 import { CATEGORIES, PROVIDERS, getProvidersByCategory, calculateDistance } from '@/lib/data'
+import { useLocationStore } from '@/store/location'
+
+// Dynamically import MapView for performance
+const MapView = dynamic(() => import('@/components/map/MapView'), {
+  loading: () => (
+    <div className="h-[400px] bg-stone-100 rounded-2xl flex items-center justify-center">
+      <div className="text-stone-500 text-sm">Loading map...</div>
+    </div>
+  ),
+  ssr: false,
+})
 
 const SORT_OPTIONS = ['All', '4.5+ Stars', 'Verified Only', 'KSh 0–1K', 'KSh 1K–5K', 'Premium']
 const LOCATIONS   = ['All Areas', 'Nairobi CBD', 'Westlands', 'Kilimani', 'Karen', 'Lavington']
@@ -18,6 +30,9 @@ function ListingContent() {
   const [activeSort, setActiveSort]   = useState('All')
   const [activeLoc,  setActiveLoc]    = useState('All Areas')
   const [activeDist, setActiveDist]  = useState('Any Distance')
+  const [viewMode, setViewMode]       = useState<'list' | 'map'>('list')
+  
+  const { userLocation } = useLocationStore()
 
   const baseList = categoryId ? getProvidersByCategory(categoryId) : PROVIDERS
 
@@ -113,22 +128,96 @@ function ListingContent() {
         ))}
       </div>
 
+      {/* View toggle */}
+      <div className="flex gap-2 px-5 py-2.5 border-b border-stone-100">
+        <button
+          onClick={() => setViewMode('list')}
+          className={`flex-1 px-3.5 py-2 rounded-xl text-[13px] font-medium border transition-all
+            ${viewMode === 'list'
+              ? 'bg-ink text-chalk border-ink'
+              : 'bg-white text-stone-500 border-stone-200 hover:border-stone-400'
+            }`}
+        >
+          📋 List View
+        </button>
+        <button
+          onClick={() => setViewMode('map')}
+          className={`flex-1 px-3.5 py-2 rounded-xl text-[13px] font-medium border transition-all
+            ${viewMode === 'map'
+              ? 'bg-ink text-chalk border-ink'
+              : 'bg-white text-stone-500 border-stone-200 hover:border-stone-400'
+            }`}
+        >
+          🗺️ Map View
+        </button>
+      </div>
+
       {/* Results */}
-      <div className="px-5 py-4 space-y-3">
-        <p className="text-[12px] text-stone-400 font-medium mb-1">
-          {filtered.length} {filtered.length === 1 ? 'provider' : 'providers'} found
-        </p>
-        {filtered.length > 0
-          ? filtered.map(p => <ProviderCard key={p.id} provider={p} />)
-          : (
+      {viewMode === 'list' ? (
+        <div className="px-5 py-4 space-y-3">
+          <p className="text-[12px] text-stone-400 font-medium mb-1">
+            {filtered.length} {filtered.length === 1 ? 'provider' : 'providers'} found
+          </p>
+          {filtered.length > 0
+            ? filtered.map(p => <ProviderCard key={p.id} provider={p} />)
+            : (
+              <div className="text-center py-16 text-stone-400">
+                <p className="text-3xl mb-3">🔍</p>
+                <p className="font-medium">No providers found</p>
+                <p className="text-sm mt-1">Try adjusting your filters</p>
+              </div>
+            )
+          }
+        </div>
+      ) : (
+        <div className="px-5 py-4">
+          <p className="text-[12px] text-stone-400 font-medium mb-3">
+            {filtered.length} {filtered.length === 1 ? 'provider' : 'providers'} on map
+          </p>
+          {filtered.length > 0 ? (
+            <div className="space-y-4">
+              <MapView 
+                providers={filtered}
+                center={userLocation || { lat: -1.2921, lng: 36.8219 }}
+                height="calc(100vh - 300px)"
+                onProviderClick={(provider) => {
+                  // Could add navigation to provider profile or show details
+                  console.log('Provider clicked:', provider)
+                }}
+              />
+              {/* Optional: Bottom sheet with provider cards */}
+              <div className="max-h-48 overflow-y-auto space-y-2 pb-4">
+                <p className="text-[11px] text-stone-500 font-medium mb-2">Providers on map:</p>
+                {filtered.slice(0, 3).map(p => (
+                  <div key={p.id} className="bg-white border border-stone-200 rounded-xl p-3 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
+                      <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{p.name}</p>
+                      <p className="text-xs text-stone-500 truncate">{p.specialty}</p>
+                    </div>
+                    <p className="text-xs font-semibold text-stone-900">
+                      KSh {p.startingPrice.toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+                {filtered.length > 3 && (
+                  <p className="text-xs text-stone-400 text-center">
+                    +{filtered.length - 3} more providers
+                  </p>
+                )}
+              </div>
+            </div>
+          ) : (
             <div className="text-center py-16 text-stone-400">
-              <p className="text-3xl mb-3">�</p>
+              <p className="text-3xl mb-3">🗺️</p>
               <p className="font-medium">No providers found</p>
               <p className="text-sm mt-1">Try adjusting your filters</p>
             </div>
-          )
-        }
-      </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

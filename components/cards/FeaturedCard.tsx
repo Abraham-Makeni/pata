@@ -44,6 +44,10 @@ export default function FeaturedCard({ provider: p }: { provider: Provider }) {
               <span>👥</span>
               <span>{p.repeatClients}</span>
             </span>
+            <span className="flex items-center gap-0.5">
+              <span>📍</span>
+              <span>{distance.toFixed(1)} km</span>
+            </span>
           </div>
           
           <p className="font-semibold text-[12px] mt-1.5">

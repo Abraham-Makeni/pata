@@ -5,6 +5,18 @@ import Link from 'next/link'
 import { getProviderById, Provider } from '@/lib/data'
 import StarRating from '@/components/ui/StarRating'
 import { ProfileSkeleton } from '@/components/ui/Skeletons'
+import dynamic from 'next/dynamic'
+import { getDirectionsUrl } from '@/lib/location'
+
+// Dynamically import MapView for performance
+const MapView = dynamic(() => import('@/components/map/MapView'), {
+  loading: () => (
+    <div className="h-[200px] bg-stone-100 rounded-2xl flex items-center justify-center">
+      <div className="text-stone-500 text-sm">Loading map...</div>
+    </div>
+  ),
+  ssr: false,
+})
 
 export default function ProfilePage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -116,6 +128,39 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
               {tag}
             </span>
           ))}
+        </div>
+
+        {/* Location & Map */}
+        <SectionLabel>Location</SectionLabel>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[14px] font-medium">{p.location}</p>
+              <p className="text-[12px] text-stone-500 mt-0.5">Service area</p>
+            </div>
+            <a
+              href={getDirectionsUrl(p.coordinates)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-ink text-white px-4 py-2 rounded-xl text-[13px] font-medium hover:bg-stone-700 transition-all"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+              Get Directions
+            </a>
+          </div>
+          
+          {/* Embedded Map Preview */}
+          <div className="rounded-2xl overflow-hidden border border-stone-200">
+            <MapView 
+              providers={[p]}
+              center={p.coordinates}
+              height="200px"
+              zoom={15}
+              showProviderInfo={false}
+            />
+          </div>
         </div>
 
         {/* About */}

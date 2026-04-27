@@ -7,6 +7,7 @@ export default function AuthPage() {
   const router = useRouter()
   const [tab, setTab] = useState<'signin' | 'signup'>('signin')
   const [loading, setLoading] = useState(false)
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
 
   const handleSubmit = () => {
     setLoading(true)
@@ -61,13 +62,40 @@ export default function AuthPage() {
         {/* Sign Up Form */}
         {tab === 'signup' && (
           <div className="space-y-4 page-enter">
-            <Field label="Full Name" type="text" placeholder="Your name" />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Field label="First Name" type="text" placeholder="John" />
+              </div>
+              <div>
+                <Field label="Last Name" type="text" placeholder="Doe" />
+              </div>
+            </div>
             <Field label="Email" type="email" placeholder="you@example.com" />
-            <Field label="Phone" type="tel" placeholder="+254 7XX XXX XXX" />
+            <Field label="Phone" type="tel" placeholder="+254712345678" />
             <Field label="Password" type="password" placeholder="Create a password" />
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="mr-2"
+                required
+              />
+              <label htmlFor="terms" className="text-sm text-stone-600">
+                I agree to the{' '}
+                <Link href="/terms" className="text-ink hover:underline">
+                  Terms of Service
+                </Link>
+                {' '}and{' '}
+                <Link href="/privacy" className="text-ink hover:underline">
+                  Privacy Policy
+                </Link>
+              </label>
+            </div>
             <button
               onClick={handleSubmit}
-              disabled={loading}
+              disabled={loading || !agreedToTerms}
               className="w-full bg-ink text-chalk py-4 rounded-2xl font-semibold text-[15px] mt-2 hover:bg-stone-700 transition-all disabled:opacity-60"
             >
               {loading ? 'Creating account...' : 'Create Account'}
@@ -75,10 +103,14 @@ export default function AuthPage() {
             <Divider />
             <SocialButtons onPress={handleSubmit} />
             <p className="text-center text-[12px] text-stone-400 leading-relaxed mt-2">
-              By signing up you agree to our{' '}
-              <Link href="#" className="text-ink underline">Terms of Service</Link>
+              By creating an account, you agree to our{' '}
+              <Link href="/terms" className="text-ink hover:underline">
+                Terms of Service
+              </Link>
               {' '}and{' '}
-              <Link href="#" className="text-ink underline">Privacy Policy</Link>
+              <Link href="/privacy" className="text-ink hover:underline">
+                Privacy Policy
+              </Link>
             </p>
           </div>
         )}

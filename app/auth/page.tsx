@@ -6,10 +6,26 @@ export default function AuthPage() {
   const router = useRouter()
   const [tab, setTab] = useState<'in'|'up'>('in')
   const [loading, setLoading] = useState(false)
+  const [accountType, setAccountType] = useState<'book'|'offer'|null>(null)
+  const [loginType, setLoginType] = useState<'user'|'business'>('user')
 
   const submit = () => {
     setLoading(true)
-    setTimeout(() => router.push('/home'), 900)
+    if (tab === 'in') {
+      // Sign in logic
+      if (loginType === 'business') {
+        setTimeout(() => router.push('/business/home'), 900)
+      } else {
+        setTimeout(() => router.push('/home'), 900)
+      }
+    } else {
+      // Create account logic
+      if (accountType === 'offer') {
+        setTimeout(() => router.push('/business/home'), 900)
+      } else {
+        setTimeout(() => router.push('/home'), 900)
+      }
+    }
   }
 
   return (
@@ -44,6 +60,85 @@ export default function AuthPage() {
           <Field label="Email"       type="email"    ph="you@example.com" />
           {tab === 'up' && <Field label="Phone"       type="tel"      ph="+254 7XX XXX XXX" />}
           <Field label="Password"    type="password" ph="••••••••" />
+
+          {tab === 'in' && (
+            <div>
+              <label className="block text-[11px] font-semibold tracking-widest uppercase text-ink-muted mb-3"
+                style={{ fontFamily:'var(--font-outfit)' }}>Login Type</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setLoginType('user')}
+                  className={`flex items-center justify-center gap-2 py-3.5 rounded-2xl text-[14px] font-medium tap-effect transition-all ${
+                    loginType === 'user' 
+                      ? 'bg-black text-white' 
+                      : 'bg-white text-black border border-surface-border'
+                  }`}
+                  style={{ fontFamily:'var(--font-outfit)' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  User
+                </button>
+                <button
+                  onClick={() => setLoginType('business')}
+                  className={`flex items-center justify-center gap-2 py-3.5 rounded-2xl text-[14px] font-medium tap-effect transition-all ${
+                    loginType === 'business' 
+                      ? 'bg-black text-white' 
+                      : 'bg-white text-black border border-surface-border'
+                  }`}
+                  style={{ fontFamily:'var(--font-outfit)' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 21h18"/>
+                    <path d="M5 21V7l8-4v18"/>
+                    <rect x="9" y="9" width="4" height="4"/>
+                    <rect x="9" y="14" width="4" height="4"/>
+                  </svg>
+                  Business
+                </button>
+              </div>
+            </div>
+          )}
+
+          {tab === 'up' && (
+            <div>
+              <label className="block text-[11px] font-semibold tracking-widest uppercase text-ink-muted mb-3"
+                style={{ fontFamily:'var(--font-outfit)' }}>Account Type</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setAccountType('book')}
+                  className={`flex items-center justify-center gap-2 py-3.5 rounded-2xl text-[14px] font-medium tap-effect transition-all ${
+                    accountType === 'book' 
+                      ? 'bg-black text-white' 
+                      : 'bg-white text-black border border-surface-border'
+                  }`}
+                  style={{ fontFamily:'var(--font-outfit)' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="m16 10-4 4-4-4"/>
+                  </svg>
+                  Book Services
+                </button>
+                <button
+                  onClick={() => setAccountType('offer')}
+                  className={`flex items-center justify-center gap-2 py-3.5 rounded-2xl text-[14px] font-medium tap-effect transition-all ${
+                    accountType === 'offer' 
+                      ? 'bg-black text-white' 
+                      : 'bg-white text-black border border-surface-border'
+                  }`}
+                  style={{ fontFamily:'var(--font-outfit)' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                    <polyline points="14,2 14,8 20,8"/>
+                    <line x1="12" y1="18" x2="12" y2="12"/>
+                    <line x1="9" y1="15" x2="15" y2="15"/>
+                  </svg>
+                  Offer Services
+                </button>
+              </div>
+            </div>
+          )}
 
           <button onClick={submit} disabled={loading}
             className="w-full py-4 rounded-2xl font-semibold text-[15px] mt-2 tap-effect transition-all"

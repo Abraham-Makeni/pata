@@ -26,7 +26,9 @@ export default function HomePage() {
           <span style={{ fontFamily:'var(--font-syne)', fontSize:28, fontWeight:800, color:'#fff', letterSpacing:'-1px' }}>PATA</span>
           <div className="flex items-center gap-2">
             <button className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white text-base">🔔</button>
-            <div className="w-9 h-9 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white text-[13px] font-semibold" style={{ fontFamily:'var(--font-syne)' }}>AK</div>
+            <Link href="/profile/me">
+              <div className="w-9 h-9 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white text-[13px] font-semibold cursor-pointer hover:bg-white/30 transition-all" style={{ fontFamily:'var(--font-syne)' }}>AK</div>
+            </Link>
           </div>
         </div>
         <p className="text-white/50 text-[13px] mb-1" style={{ fontFamily:'var(--font-outfit)' }}>Good afternoon 👋</p>

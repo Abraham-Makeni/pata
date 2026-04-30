@@ -42,7 +42,7 @@ export const useMapStore = create<MapState>((set, get) => ({
 
   // Detect user location using browser Geolocation API
   detectUserLocation: () => {
-    const { setUserLocation, setLocationLoading, setLocationError } = get()
+    const { setUserLocation, setLocationLoading, setLocationError, setMapCenter } = get()
     
     if (!navigator.geolocation) {
       setLocationError('Geolocation is not supported by your browser')

@@ -1,6 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { getProviderById } from '@/lib/data'
 
 // Username to provider ID mapping
 const usernameToProviderId: { [key: string]: string } = {
@@ -107,26 +108,168 @@ const mockPosts = [
   }
 ]
 
+const FILTER_CHIPS = ['All', 'Barbershop', 'Salon', 'Nail Salon', 'Tattoo Studio', 'Nearby']
+
 export default function DiscoverPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedPost, setSelectedPost] = useState<typeof mockPosts[0] | null>(null)
+  const [activeFilter, setActiveFilter] = useState('All')
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null)
   const [posts, setPosts] = useState(mockPosts)
+  const swipeStartX = useRef<number | null>(null)
 
   const handlePostClick = (post: typeof mockPosts[0]) => {
-    setSelectedPost(post)
+    setSelectedPostId(post.id)
   }
 
   const handleCloseModal = () => {
-    setSelectedPost(null)
+    setSelectedPostId(null)
   }
 
   const handleLike = (postId: number) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 }
-        : post
-    ))
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 }
+          : post
+      )
+    )
+  }
+
+  const getProviderMeta = (username: string) => {
+    const providerId = usernameToProviderId[username]
+    if (!providerId) return null
+    return getProviderById(providerId)
+  }
+
+  const getProviderDistance = (username: string) => {
+    const provider = getProviderMeta(username)
+    if (!provider?.coordinates) return 'Distance unavailable'
+    const nairobiCenter = { lat: -1.2921, lng: 36.8219 }
+    const latDiff = provider.coordinates.lat - nairobiCenter.lat
+    const lngDiff = provider.coordinates.lng - nairobiCenter.lng
+    const distanceKm = Math.sqrt((latDiff ** 2) + (lngDiff ** 2)) * 111
+    return `${distanceKm.toFixed(1)} km away`
+  }
+
+  const getProviderDistanceValue = (username: string) => {
+    const provider = getProviderMeta(username)
+    if (!provider?.coordinates) return null
+    const nairobiCenter = { lat: -1.2921, lng: 36.8219 }
+    const latDiff = provider.coordinates.lat - nairobiCenter.lat
+    const lngDiff = provider.coordinates.lng - nairobiCenter.lng
+    return Math.sqrt((latDiff ** 2) + (lngDiff ** 2)) * 111
+  }
+
+  const getProviderOpenStatus = (username: string) => {
+    const providerId = usernameToProviderId[username]
+    if (!providerId) return { label: 'Unknown', className: 'text-ink-muted' }
+    const isOpen = Number(providerId) % 2 === 1
+    return {
+      label: isOpen ? 'Open now' : 'Closed',
+      className: isOpen ? 'text-emerald-600' : 'text-rose-500',
+    }
+  }
+
+  const handleOpenProviderOnMap = (username: string) => {
+    const providerId = usernameToProviderId[username]
+    if (!providerId) {
+      router.push('/maps')
+      return
+    }
+    router.push(`/maps?providerId=${providerId}`)
+  }
+
+  const normalizeText = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '')
+
+  const searchAliases: Record<string, string[]> = {
+    haircut: ['haircut', 'haircuts', 'cut', 'fade', 'lineup', 'barber'],
+    braids: ['braid', 'braids', 'naturalhair', 'dreads'],
+    nails: ['nail', 'nails', 'nailart', 'manicure', 'pedicure', 'acrylic'],
+    tattoo: ['tattoo', 'tattoos', 'ink', 'bodyart'],
+    makeup: ['makeup', 'glam', 'bridal', 'beauty'],
+  }
+
+  const getExpandedTokens = (query: string) => {
+    const normalized = normalizeText(query)
+    if (!normalized) return []
+    const expanded = new Set([normalized])
+
+    Object.values(searchAliases).forEach((aliases) => {
+      if (aliases.some((alias) => normalized.includes(alias) || alias.includes(normalized))) {
+        aliases.forEach((alias) => expanded.add(alias))
+      }
+    })
+
+    return Array.from(expanded)
+  }
+
+  const filteredPosts = useMemo(() => {
+    const trimmed = searchQuery.trim()
+    const tokens = getExpandedTokens(trimmed)
+
+    const byChip = posts.filter((post) => {
+      if (activeFilter === 'All') return true
+      if (activeFilter === 'Nearby') {
+        const distance = getProviderDistanceValue(post.username)
+        return distance !== null && distance <= 8
+      }
+      if (activeFilter === 'Salon') return post.category.includes('Salon')
+      return post.category === activeFilter
+    })
+
+    if (!trimmed) return byChip
+
+    const withScore = byChip
+      .map((post) => {
+        const searchableParts = [
+          post.username,
+          post.location,
+          post.category,
+          ...post.tags.map((tag) => tag.replace('#', '')),
+        ].map(normalizeText)
+
+        const score = tokens.reduce((acc, token) => {
+          const tokenScore = searchableParts.reduce((partAcc, part) => {
+            if (part === token) return partAcc + 6
+            if (part.startsWith(token)) return partAcc + 4
+            if (part.includes(token)) return partAcc + 2
+            return partAcc
+          }, 0)
+          return acc + tokenScore
+        }, 0)
+
+        return { post, score }
+      })
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+
+    return withScore.map((item) => item.post)
+  }, [posts, searchQuery, activeFilter])
+
+  const selectedPostIndex = filteredPosts.findIndex((post) => post.id === selectedPostId)
+  const selectedPost = selectedPostIndex >= 0 ? filteredPosts[selectedPostIndex] : null
+
+  const handleNavigateModalPost = (direction: 'next' | 'prev') => {
+    if (!selectedPost || filteredPosts.length < 2) return
+    const targetIndex =
+      direction === 'next'
+        ? (selectedPostIndex + 1) % filteredPosts.length
+        : (selectedPostIndex - 1 + filteredPosts.length) % filteredPosts.length
+    setSelectedPostId(filteredPosts[targetIndex].id)
+  }
+
+  const handleTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
+    swipeStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd: React.TouchEventHandler<HTMLDivElement> = (e) => {
+    if (swipeStartX.current === null) return
+    const deltaX = e.changedTouches[0].clientX - swipeStartX.current
+    if (Math.abs(deltaX) >= 50) {
+      handleNavigateModalPost(deltaX < 0 ? 'next' : 'prev')
+    }
+    swipeStartX.current = null
   }
 
   return (
@@ -144,12 +287,33 @@ export default function DiscoverPage() {
             style={{ fontFamily: 'var(--font-outfit)' }}
           />
         </div>
+        <div className="flex gap-2 mt-3 overflow-x-auto no-scrollbar">
+          {FILTER_CHIPS.map((chip) => (
+            <button
+              key={chip}
+              onClick={() => setActiveFilter(chip)}
+              className={`px-3 py-1.5 rounded-full text-[12px] whitespace-nowrap border transition-all ${
+                activeFilter === chip
+                  ? 'bg-brand text-white border-brand'
+                  : 'bg-white text-ink-secondary border-surface-border'
+              }`}
+              style={{ fontFamily: 'var(--font-outfit)' }}
+            >
+              {chip}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Staggered Grid */}
       <div className="px-4 py-4">
+        {filteredPosts.length === 0 && (
+          <div className="bg-white rounded-xl p-4 text-[13px] text-ink-secondary mb-4" style={{ fontFamily: 'var(--font-outfit)' }}>
+            No results found. Try another service, style, or location.
+          </div>
+        )}
         <div className="columns-2 gap-4 space-y-4">
-          {posts.map((post, index) => (
+          {filteredPosts.map((post, index) => (
             <div 
               key={post.id}
               className="break-inside-avoid mb-4 cursor-pointer group"
@@ -205,7 +369,7 @@ export default function DiscoverPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Post Image */}
-            <div className="relative">
+            <div className="relative" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
               <img 
                 src={selectedPost.imageUrl}
                 alt={`${selectedPost.username}'s post`}
@@ -223,6 +387,23 @@ export default function DiscoverPage() {
               >
                 <svg width={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
+
+              {filteredPosts.length > 1 && (
+                <>
+                  <button
+                    onClick={() => handleNavigateModalPost('prev')}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/45 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-all"
+                  >
+                    <svg width={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                  </button>
+                  <button
+                    onClick={() => handleNavigateModalPost('next')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/45 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-all"
+                  >
+                    <svg width={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+                </>
+              )}
             </div>
 
             {/* Post Info */}
@@ -247,10 +428,6 @@ export default function DiscoverPage() {
                   >
                     {selectedPost.username}
                   </button>
-                  <div className="flex items-center gap-2 text-[12px] text-ink-muted">
-                    <svg width={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-brand"><path d="M21 10c0 7-9 13-9s-9 3-9 3-9 9 9 9 9-9-3-9-3z"></path><path d="M12 22v-6"></path><path d="M12 18h.01"></path></svg>
-                    <span>{selectedPost.location}</span>
-                  </div>
                 </div>
                 <button className="px-3 py-1.5 bg-surface-soft rounded-full text-[12px] font-medium text-brand hover:bg-surface-muted transition-all" style={{ fontFamily: 'var(--font-outfit)' }}>
                   {selectedPost.category}
@@ -258,12 +435,30 @@ export default function DiscoverPage() {
               </div>
 
               {/* Location */}
-              <div className="flex items-center gap-2 mb-4 p-3 bg-surface-soft rounded-xl">
+              <button
+                onClick={() => handleOpenProviderOnMap(selectedPost.username)}
+                className="w-full flex items-center justify-between gap-3 mb-4 p-3 bg-surface-soft rounded-xl hover:bg-surface-muted transition-all"
+              >
+                <div className="flex items-center gap-2">
                 <svg width={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-brand"><path d="M21 10c0 7-9 13-9s-9 3-9 3-9 9 9 9 9-9-3-9-3z"></path><path d="M12 22v-6"></path><path d="M12 18h.01"></path></svg>
-                <span className="text-[14px]" style={{ fontFamily: 'var(--font-outfit)' }}>
+                  <span className="text-[14px] text-left" style={{ fontFamily: 'var(--font-outfit)' }}>
                   {selectedPost.location}
                 </span>
-              </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-right">
+                  <p className={`text-[12px] font-medium ${getProviderOpenStatus(selectedPost.username).className}`} style={{ fontFamily: 'var(--font-outfit)' }}>
+                    {getProviderOpenStatus(selectedPost.username).label}
+                  </p>
+                  <p className="text-[11px] text-ink-muted" style={{ fontFamily: 'var(--font-outfit)' }}>
+                    {getProviderDistance(selectedPost.username)}
+                  </p>
+                  </div>
+                  <svg width={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-ink-muted">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </div>
+              </button>
 
               {/* Hashtags */}
               <div className="flex flex-wrap gap-2 mb-4">

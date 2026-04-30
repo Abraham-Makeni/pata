@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { CATEGORIES, PROVIDERS, getFeaturedProviders } from '@/lib/data'
 
@@ -7,7 +7,54 @@ const FILTERS = ['All','Top Rated','Budget','Premium','New']
 
 export default function HomePage() {
   const [activeFilter, setActiveFilter] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
   const featured = getFeaturedProviders()
+
+  const normalizeText = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '')
+
+  const searchAliases: Record<string, string[]> = {
+    haircut: ['haircut', 'haircuts', 'cut', 'cuts', 'lineup', 'lineups', 'fade', 'fades', 'barber'],
+    braids: ['braid', 'braids', 'boxbraids', 'protectivestyle'],
+    nails: ['nail', 'nails', 'manicure', 'pedicure', 'acrylic', 'gel'],
+    makeup: ['makeup', 'bridal', 'glam', 'airbrush'],
+    tattoo: ['tattoo', 'tattoos', 'ink'],
+    photography: ['photo', 'photos', 'photography', 'portrait', 'event'],
+  }
+
+  const getExpandedTokens = (query: string) => {
+    const normalized = normalizeText(query)
+    const expanded = new Set([normalized])
+
+    Object.values(searchAliases).forEach((aliases) => {
+      if (aliases.some((alias) => normalized.includes(alias) || alias.includes(normalized))) {
+        aliases.forEach((alias) => expanded.add(alias))
+      }
+    })
+
+    return Array.from(expanded)
+  }
+
+  const searchResults = useMemo(() => {
+    const trimmed = searchQuery.trim()
+    if (!trimmed) return []
+
+    const tokens = getExpandedTokens(trimmed)
+    return PROVIDERS.filter((provider) => {
+      const searchable = [
+        provider.name,
+        provider.location,
+        provider.category,
+        ...provider.tags,
+        ...provider.services.map((service) => service.name),
+      ]
+        .map(normalizeText)
+        .join(' ')
+
+      return tokens.some((token) => searchable.includes(token))
+    })
+  }, [searchQuery])
+
+  const isSearching = searchQuery.trim().length > 0
 
   const filtered = PROVIDERS.filter(p => {
     if (activeFilter === 'All')       return p.featured
@@ -25,7 +72,9 @@ export default function HomePage() {
         <div className="flex items-center justify-between mb-5">
           <span style={{ fontFamily:'var(--font-syne)', fontSize:28, fontWeight:800, color:'#fff', letterSpacing:'-1px' }}>PATA</span>
           <div className="flex items-center gap-2">
-            <button className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white text-base">🔔</button>
+            <Link href="/notifications" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white text-base hover:bg-white/20 transition-all">
+              🔔
+            </Link>
             <Link href="/profile/me">
               <div className="w-9 h-9 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white text-[13px] font-semibold cursor-pointer hover:bg-white/30 transition-all" style={{ fontFamily:'var(--font-syne)' }}>AK</div>
             </Link>
@@ -39,13 +88,66 @@ export default function HomePage() {
         <div className="mt-4 flex items-center gap-3 bg-white/10 border border-white/15 rounded-2xl px-4 py-3">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input type="text" placeholder="Search services, providers…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="flex-1 bg-transparent text-white placeholder:text-white/40 text-[15px] outline-none"
             style={{ fontFamily:'var(--font-outfit)' }}/>
         </div>
       </div>
 
+      {/* ── SEARCH RESULTS ── */}
+      {isSearching && (
+        <div className="px-5 pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 style={{ fontFamily:'var(--font-syne)', fontSize:18, fontWeight:700, letterSpacing:'-0.3px' }}>
+              Search Results
+            </h2>
+            <span className="text-[12px] text-ink-muted" style={{ fontFamily:'var(--font-outfit)' }}>
+              {searchResults.length} found
+            </span>
+          </div>
+
+          {searchResults.length === 0 ? (
+            <div className="bg-white rounded-card p-4 shadow-card">
+              <p className="text-[14px] text-ink-secondary" style={{ fontFamily:'var(--font-outfit)' }}>
+                No services matched &quot;{searchQuery}&quot;. Try another service name like haircut, braids, nails, or makeup.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {searchResults.map((p) => (
+                <Link key={p.id} href={`/profile/${p.id}`}>
+                  <div className="bg-white rounded-card p-3 flex gap-3 shadow-card tap-effect">
+                    <div className="img-placeholder w-16 h-16 rounded-xl flex-shrink-0 overflow-hidden">
+                      <img src={p.avatarImage} alt={p.name} className="w-full h-full object-cover" onError={e=>{(e.target as HTMLImageElement).style.display='none'}}/>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between">
+                        <p style={{ fontFamily:'var(--font-syne)', fontSize:14, fontWeight:700 }}>{p.name}</p>
+                        <span className="text-[11px] text-ink-muted flex-shrink-0 ml-2" style={{ fontFamily:'var(--font-outfit)' }}>{p.location}</span>
+                      </div>
+                      <p className="text-ink-muted text-[12px] mt-0.5 truncate" style={{ fontFamily:'var(--font-outfit)' }}>
+                        {p.services.slice(0, 2).map((service) => service.name).join(' · ')}
+                      </p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-[12px] flex items-center gap-1" style={{ fontFamily:'var(--font-outfit)' }}>
+                          <span className="star-gold">★</span>
+                          <span className="font-semibold">{p.rating}</span>
+                          <span className="text-ink-faint">({p.reviewCount})</span>
+                        </span>
+                        <span className="text-[13px] font-semibold" style={{ fontFamily:'var(--font-syne)' }}>KSh {p.startingPrice.toLocaleString()}+</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ── CATEGORIES ── */}
-      <div className="px-5 pt-6">
+      {!isSearching && <div className="px-5 pt-6">
         <div className="flex items-center justify-between mb-4">
           <h2 style={{ fontFamily:'var(--font-syne)', fontSize:18, fontWeight:700, letterSpacing:'-0.3px' }}>Categories</h2>
         </div>
@@ -67,10 +169,10 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* ── TRENDING ── */}
-      <div className="pt-7">
+      {!isSearching && <div className="pt-7">
         <div className="flex items-center justify-between px-5 mb-4">
           <h2 style={{ fontFamily:'var(--font-syne)', fontSize:18, fontWeight:700, letterSpacing:'-0.3px' }}>Near You</h2>
           <Link href="/listing" className="text-[13px] text-ink-secondary underline" style={{ fontFamily:'var(--font-outfit)' }}>See all</Link>
@@ -112,10 +214,10 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* ── QUICK PICKS ── */}
-      <div className="px-5 pt-7">
+      {!isSearching && <div className="px-5 pt-7">
         <h2 style={{ fontFamily:'var(--font-syne)', fontSize:18, fontWeight:700, letterSpacing:'-0.3px', marginBottom:16 }}>Top Rated</h2>
         <div className="space-y-3">
           {PROVIDERS.filter(p => p.rating >= 4.8).slice(0,3).map(p => (
@@ -143,7 +245,7 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
-      </div>
+      </div>}
     </div>
   )
 }

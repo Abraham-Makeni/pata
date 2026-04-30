@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api'
 import { PROVIDERS, CATEGORIES } from '@/lib/data'
 import { useMapStore } from '@/store/map'
@@ -62,8 +63,10 @@ export default function MapsPage() {
   const [selectedProvider, setSelectedProvider] = useState<any>(null)
   const [showList, setShowList] = useState(false)
   const [activeCategory, setActiveCategory] = useState<string>('all')
+  const searchParams = useSearchParams()
   
   const { userLocation, locationLoading, locationError, detectUserLocation, setMapCenter } = useMapStore()
+  const providerIdFromQuery = searchParams.get('providerId')
 
   // Filter providers by category
   const filteredProviders = useMemo(() => {
@@ -75,6 +78,20 @@ export default function MapsPage() {
   const providersWithCoords = useMemo(() => 
     filteredProviders.filter(p => p.coordinates),
   [filteredProviders])
+
+  useEffect(() => {
+    if (!providerIdFromQuery) return
+    const providerFromQuery = PROVIDERS.find(p => p.id === providerIdFromQuery)
+    if (!providerFromQuery) return
+
+    setSelectedProvider(providerFromQuery)
+    if (providerFromQuery.category) {
+      setActiveCategory(providerFromQuery.category)
+    }
+    if (providerFromQuery.coordinates) {
+      setMapCenter(providerFromQuery.coordinates)
+    }
+  }, [providerIdFromQuery, setMapCenter])
 
   const onMarkerClick = useCallback((provider: any) => {
     setSelectedProvider(provider)
@@ -170,7 +187,7 @@ export default function MapsPage() {
           <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
-              center={userLocation || defaultCenter}
+              center={selectedProvider?.coordinates || userLocation || defaultCenter}
               zoom={activeCategory === 'all' ? 12 : 14}
               options={mapOptions}
               className="h-full w-full"

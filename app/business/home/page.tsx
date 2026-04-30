@@ -1,9 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import Image from 'next/image'
 
+const BUSINESS_ID = '1'
+const BUSINESS_UPLOADS_KEY = `businessUploads:${BUSINESS_ID}`
+
 export default function BusinessHomePage() {
-  const [activeSection, setActiveSection] = useState<'insights' | 'analytics' | 'posts'>('insights')
+  const [activeSection, setActiveSection] = useState<'insights' | 'analytics' | 'posts' | 'uploads'>('insights')
+  const [uploadedImages, setUploadedImages] = useState<string[]>([])
 
   // Mock data for demonstration
   const insights = [
@@ -28,6 +32,49 @@ export default function BusinessHomePage() {
     { id: 2, title: 'New Hair Treatment Available', status: 'published', date: '2024-04-25', engagement: '189 views' },
     { id: 3, title: 'Holiday Hours Update', status: 'draft', date: '2024-04-22', engagement: 'Not published' },
   ]
+
+  useEffect(() => {
+    const storedUploads = window.localStorage.getItem(BUSINESS_UPLOADS_KEY)
+    if (!storedUploads) return
+
+    try {
+      const parsed = JSON.parse(storedUploads) as string[]
+      if (Array.isArray(parsed)) {
+        setUploadedImages(parsed)
+      }
+    } catch {
+      // Ignore malformed local storage payloads.
+    }
+  }, [])
+
+  const handleUploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files?.length) return
+
+    const readFileAsDataUrl = (file: File) =>
+      new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(String(reader.result))
+        reader.onerror = () => reject(new Error('Failed to read file'))
+        reader.readAsDataURL(file)
+      })
+
+    const dataUrls = await Promise.all(Array.from(files).map(readFileAsDataUrl))
+    setUploadedImages((prev) => {
+      const nextUploads = [...dataUrls, ...prev].slice(0, 24)
+      window.localStorage.setItem(BUSINESS_UPLOADS_KEY, JSON.stringify(nextUploads))
+      return nextUploads
+    })
+    event.target.value = ''
+  }
+
+  const handleRemoveUploadedImage = (image: string) => {
+    setUploadedImages((prev) => {
+      const nextUploads = prev.filter((item) => item !== image)
+      window.localStorage.setItem(BUSINESS_UPLOADS_KEY, JSON.stringify(nextUploads))
+      return nextUploads
+    })
+  }
 
   return (
     <div className="min-h-screen bg-surface-soft">
@@ -59,6 +106,7 @@ export default function BusinessHomePage() {
             { id: 'insights', label: 'Insights' },
             { id: 'analytics', label: 'Analytics' },
             { id: 'posts', label: 'Posts' },
+            { id: 'uploads', label: 'Uploads' },
           ].map((section) => (
             <button
               key={section.id}
@@ -243,6 +291,55 @@ export default function BusinessHomePage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Uploads Section */}
+        {activeSection === 'uploads' && (
+          <div className="space-y-4">
+            <div className="bg-white rounded-2xl border border-surface-border p-4">
+              <h2 className="text-lg font-semibold text-gray-900 mb-1" style={{ fontFamily:'var(--font-outfit)' }}>
+                Upload Portfolio Images
+              </h2>
+              <p className="text-xs text-ink-muted mb-4" style={{ fontFamily:'var(--font-outfit)' }}>
+                Images uploaded here appear on your business profile under Posts.
+              </p>
+              <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand text-white text-sm font-medium rounded-lg cursor-pointer hover:bg-brand/90 transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 5v14m-7-7h14"></path>
+                </svg>
+                Add Images
+                <input type="file" accept="image/*" multiple className="hidden" onChange={handleUploadImages} />
+              </label>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-surface-border p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-gray-900" style={{ fontFamily:'var(--font-outfit)' }}>
+                  Uploaded ({uploadedImages.length})
+                </h3>
+              </div>
+
+              {uploadedImages.length === 0 ? (
+                <p className="text-xs text-ink-muted" style={{ fontFamily:'var(--font-outfit)' }}>
+                  No uploads yet. Add images to show your latest work.
+                </p>
+              ) : (
+                <div className="grid grid-cols-3 gap-2">
+                  {uploadedImages.map((image, index) => (
+                    <div key={`${image}-${index}`} className="relative group">
+                      <img src={image} alt={`Upload ${index + 1}`} className="w-full aspect-square object-cover rounded-lg" />
+                      <button
+                        onClick={() => handleRemoveUploadedImage(image)}
+                        className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
